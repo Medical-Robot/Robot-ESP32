@@ -1,18 +1,14 @@
 #include <Arduino.h>
+#include <Wire.h>
 
-// put function declarations here:
-int myFunction(int, int);
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+  Wire.begin();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  Wire.beginTransmission(4); 
+  Wire.write("x is ");        
+  Wire.endTransmission(); 
 }
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
-}

@@ -1,0 +1,3 @@
+https://rntlab.com/question/what-pins-are-the-i2c-pins-on-the-esp32/
+
+https://raw.githubusercontent.com/wiki/bdring/FluidNC/images/dev_kit_pinout.jpg
