@@ -3,6 +3,10 @@
 
 #define SLAVE_ADDRESS 9
 
+struct robot_message{
+  
+};
+
 void setup() {
   Wire.begin();
   Serial.begin(115200);
