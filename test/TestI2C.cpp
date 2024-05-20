@@ -19,10 +19,9 @@ struct robot_message{
 
 void setup() {
   Wire.begin();
-  Serial.begin(115200);
-  while (!Serial){
-      delay(100);
-  }
+  Serial.begin(9600);
+  //while (!Serial){
+     // delay(100); }
   Serial.println("ESP32 Started");
 }
 
