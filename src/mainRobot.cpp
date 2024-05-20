@@ -1,22 +1,25 @@
 #include <Arduino.h>
+//#include <vector>
+//#include <queue>
 #include <LineSensors.h>
-#include <SteeringController.h>
-#include <Path.h>
-#include <Map.h>
-#include <intersectionSteeringLogic.h>
-
 #define ENABLE_ARDUINO 1
+
+//#include <Path.h>
+//#include <Map.h>
+//#include <intersectionSteeringLogic.h>
 
 #define MOTORS_LEFT_IN1_PIN1 33
 #define MOTORS_LEFT_IN2_PIN2 25
 #define MOTORS_RIGHT_IN3_PIN1 26
 #define MOTORS_RIGHT_IN4_PIN2 27
 
+#include <SteeringController.h>
+
 #define BLACK_COLOR_THRESHOLD 0.5f
 
 
 // gg
-
+// arduin uno
 /*
   White offset
   S1: 75
@@ -24,6 +27,35 @@
   S3: 56
   S4: 74
   S5: 82
+*/
+
+/*
+  background laborator offset
+  S1: 225
+  S2: 91
+  S3: 101
+  S4: 203
+  S5: 197
+*/
+
+
+/*
+  colored line value:
+  S1: 581
+  S2: 572
+  S3: 557
+  S4: 586
+  S5: 588
+*/
+
+// ESP32
+/*
+  White offset
+  S1: 1312.00
+  S2: 691.00
+  S3: 1006.00
+  S4: 1378.00
+  S5: 1491.00
 */
 
 /*
@@ -58,21 +90,21 @@ int linesensors_pins[TOTAL_LINE_SENSORS] = {LINE_SENSOR_1_PIN, LINE_SENSOR_2_PIN
 LineSensors lineSensors(TOTAL_LINE_SENSORS);
 float sensorsReadings[TOTAL_LINE_SENSORS];
 Point2D linePosition;
-Path checkpointPath;
-Map checkpointMap;
-CheckPointDirection checkpointDirection;
+//Path checkpointPath;
+//Map checkpointMap;
+//CheckPointDirection checkpointDirection;
 
 SteeringController steeringController(255.0f, 0.0f, -255.0f);
 
 float BackgroundColorOnlyCalibrationAvarages[TOTAL_LINE_SENSORS] = {
-  225.0f, 91.0f, 101.0f, 203.0f, 197.0f
+  1312.0f, 691.0f, 1006.0f, 1378.0f, 1491.0f
 };
 
 float LineColorOlyCalibrationAvarages[TOTAL_LINE_SENSORS] = {
-  581.0f, 572.0f, 557.0f, 586.0f, 588.0f
+  4095.0f, 4067.0f, 3923.0f, 4095.0f, 4095.0f
 };
 
-
+/*
 void setMap(){
   Checkpoint checkPoint;
 	CheckPointDirection direction;
@@ -125,7 +157,7 @@ void setMap(){
   checkpointPath = checkpointMap.findPath(8);
 }
 
-
+*/
 void setup()
 {
   Serial.begin(9600);
@@ -153,7 +185,7 @@ void setup()
   lineSensors.setPins(linesensors_pins, TOTAL_LINE_SENSORS);
   lineSensors.SetBackgroundColorOnlyCalibrationAvarages(BackgroundColorOnlyCalibrationAvarages);
   lineSensors.SetLineColorOlyCalibrationAvarages(LineColorOlyCalibrationAvarages);
-  setMap();
+  //setMap();
 }
 
 float speed = 0.5f;
@@ -184,11 +216,13 @@ Pos_x: -1   Left: -1    Right: +1
 */
 
   if (middleLineMin.y >= BLACK_COLOR_THRESHOLD) {
+    /*
     Serial.print('\t');
     Serial.print("PathCheckpoint detected");
-    checkpointDirection = checkpointPath.getNextDirection();
-    checkpointPath.goNextCheckPoint();
-    
+    */
+    //checkpointDirection = checkpointPath.getNextDirection();
+    //checkpointPath.goNextCheckPoint();
+    /*
     switch (checkpointDirection)
     {
     case CheckPointDirection::FRONT:
@@ -208,7 +242,7 @@ Pos_x: -1   Left: -1    Right: +1
     default:
       middleLineMax.x = 0.0f;
       break;
-    }
+    }*/
   }
   else{
     speed = 0.5f;
@@ -258,5 +292,6 @@ Pos_x: -1   Left: -1    Right: +1
 
 
   Serial.println();
+  
   steeringController.write(speed, left_track_speed_cercentage, right_track_speed_cercentage);
 }

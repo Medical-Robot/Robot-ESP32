@@ -226,6 +226,7 @@ public:
 		delete this->BackgroundColorOnlyCalibrationAvarages;
 		delete this->LineColorOlyCalibrationAvarages;
 		delete this->LineColorSensorsPercentage;
+		delete this->sensorXposition;
 		delete this->sensorPins;
 		delete this->LineSensorsRawValues;
 	}
@@ -244,8 +245,11 @@ public:
 
 	void readSensors(float* sensorsReadings){
 		for (size_t i = 0; i < NumberOfSensors; i++) {
-			sensorsReadings[i] = analogRead(this->sensorPins[i]);
+			sensorsReadings[i] = (float)analogRead(this->sensorPins[i]);
+			//Serial.print(sensorsReadings[i]);
+			//Serial.print('\t');
 		}
+		//Serial.println();
 		
 	}
 
