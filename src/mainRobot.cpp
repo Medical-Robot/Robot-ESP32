@@ -3,17 +3,16 @@
 //#include <queue>
 #include <LineSensors.h>
 #define ENABLE_ARDUINO 1
-
-#include <Path.h>
-#include <Map.h>
-//#include <intersectionSteeringLogic.h>
-
 #define MOTORS_LEFT_IN1_PIN1 33
 #define MOTORS_LEFT_IN2_PIN2 25
 #define MOTORS_RIGHT_IN3_PIN1 26
 #define MOTORS_RIGHT_IN4_PIN2 27
 
+#include <Path.h>
+#include <Map.h>
+#include <intersectionSteeringLogic.h>
 #include <SteeringController.h>
+#include <dataStructures.h>
 
 #define BLACK_COLOR_THRESHOLD 0.5f
 
@@ -92,7 +91,8 @@ float sensorsReadings[TOTAL_LINE_SENSORS];
 Point2D linePosition;
 Path checkpointPath;
 Map checkpointMap;
-//CheckPointDirection checkpointDirection;
+CheckPointDirection checkpointDirection;
+ComandaMedicamente comandaMedicamente;
 
 SteeringController steeringController(255.0f, 0.0f, -255.0f);
 
@@ -157,6 +157,33 @@ void setMap(){
   checkpointPath = checkpointMap.findPath(8);
 }
 
+void preiaComandaNoua(){
+
+}
+
+void comandaCompletata(){
+
+}
+
+void getInitialConfigsFromCloud(){
+  comandaMedicamente.status = ComandaMedicamenteStatus::STATUS_NONE;
+  // get map din cloud
+  // get robot coordinates din cloud
+
+  if(comandaMedicamente.status == ComandaMedicamenteStatus::STATUS_NONE){
+    // preia comanda din cloud
+    preiaComandaNoua();
+  }
+}
+
+void sendStateToCLoud(){
+  static uint32_t startTime = millis();
+
+  if((millis() - startTime) >= 5000){
+    startTime = millis();
+    // send status to server
+  }
+}
 
 void setup()
 {
@@ -185,7 +212,10 @@ void setup()
   lineSensors.setPins(linesensors_pins, TOTAL_LINE_SENSORS);
   lineSensors.SetBackgroundColorOnlyCalibrationAvarages(BackgroundColorOnlyCalibrationAvarages);
   lineSensors.SetLineColorOlyCalibrationAvarages(LineColorOlyCalibrationAvarages);
-  setMap();
+
+  getInitialConfigsFromCloud();
+
+  //setMap();
 }
 
 float speed = 0.5f;
@@ -194,10 +224,12 @@ float left_track_speed_cercentage = 1.0f;
 float PID_out_right, PID_out_left;
 Point2D middleLineMax, middleLineMin;
 
-int destination_reached_flag = 0;
+int echeckpoint_direction_error = 0;
 
 void loop()
 {
+  sendStateToCLoud();
+
   lineSensors.read();
   middleLineMax = lineSensors.getMaxValue();
   middleLineMin = lineSensors.getMinValue();
@@ -216,13 +248,30 @@ Pos_x: -1   Left: -1    Right: +1
 */
 
   if (middleLineMin.y >= BLACK_COLOR_THRESHOLD) {
-    /*
     Serial.print('\t');
     Serial.print("PathCheckpoint detected");
-    */
-    //checkpointDirection = checkpointPath.getNextDirection();
-    //checkpointPath.goNextCheckPoint();
-    /*
+    if (checkpointPath.reachedDestination()) {
+      //echeckpoint_direction_error = 1;
+      if (comandaMedicamente.parmacieCheckpointId == checkpointPath.getDestinationCheckpointId()){
+        // arrived at the pharmacy
+        steeringController.write(0.0f, 1.0f, 1.0f);
+        /*scan medicaments*/
+
+        // go to the pacient
+        checkpointMap.setNextCheckPoint(checkpointPath.getNextCheckPoint().id);
+        checkpointMap.setPreviousCheckPoint(checkpointPath.getPreviousCheckpoint().id);
+        checkpointPath = checkpointMap.findPath(comandaMedicamente.destinationCheckpointId);
+      }
+      else if(comandaMedicamente.destinationCheckpointId == checkpointPath.getDestinationCheckpointId()){
+        steeringController.write(0.0f, 1.0f, 1.0f);
+        // arrived at the pacient
+        /*do someting when arrived at the pacient*/
+      }
+    }
+    
+    checkpointDirection = checkpointPath.getNextDirection();
+    checkpointPath.goNextCheckPoint();
+    
     switch (checkpointDirection)
     {
     case CheckPointDirection::FRONT:
@@ -237,18 +286,19 @@ Pos_x: -1   Left: -1    Right: +1
       takeRight(speed, steeringController, lineSensors, BLACK_COLOR_THRESHOLD);
       break;
     case CheckPointDirection::NONE:
-        destination_reached_flag = 1;
+        // error or reached destination
+        echeckpoint_direction_error = 1;
       break;
     default:
       middleLineMax.x = 0.0f;
       break;
-    }*/
+    }
   }
   else{
     speed = 0.5f;
   }
 
-  if (destination_reached_flag == 1) {
+  if (echeckpoint_direction_error == 1) {
     speed = 0.0f;
   }
   

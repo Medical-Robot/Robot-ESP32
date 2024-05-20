@@ -33,6 +33,14 @@ public:
 		this->previousCheckPoint = newCheckpoint;
 	}
 
+	void setDestinationCheckpointId(int newId) {
+		this->destinationCheckpointId = newId;
+	}
+
+	int getDestinationCheckpointId() {
+		return this->destinationCheckpointId;
+	}
+
 	void goNextCheckPoint() {
 		PathCheckpoint* temp_nextCheckPoint;
 
@@ -147,12 +155,24 @@ public:
         this->checkPoints = C.checkPoints; 
 		this->previousCheckPoint = C.previousCheckPoint; 
 		this->nextCheckPoint = C.nextCheckPoint;
-    } 
+		this->destinationCheckpointId = C.destinationCheckpointId;
+    }
+
+	bool reachedDestination(){
+		if(this->nextCheckPoint.id == this->destinationCheckpointId){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
 
 private:
 	std::vector<PathCheckpoint> checkPoints;
 	PathCheckpoint previousCheckPoint;
 	PathCheckpoint nextCheckPoint;
+	int destinationCheckpointId;
+
 
 
 };

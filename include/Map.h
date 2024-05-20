@@ -290,6 +290,7 @@ public:
 
 		temp_path.setPreviousCheckPoint(pathCheckpoint);
 		temp_path.setNextCheckPoint(*(temp_path.findCheckPointById(this->nextCheckPoint.id)));
+		temp_path.setDestinationCheckpointId(destinationCheckpoint_id);
 		return temp_path;
 	}
 };
