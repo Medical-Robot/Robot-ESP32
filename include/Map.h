@@ -3,6 +3,8 @@
 #include <queue>
 #include "Path.h"
 
+
+
 #define MAX_CHECKPOINT_ID 15000
 
 #define CHECKPOINT_SIZE 20

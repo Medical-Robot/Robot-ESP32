@@ -4,8 +4,8 @@
 #include <LineSensors.h>
 #define ENABLE_ARDUINO 1
 
-//#include <Path.h>
-//#include <Map.h>
+#include <Path.h>
+#include <Map.h>
 //#include <intersectionSteeringLogic.h>
 
 #define MOTORS_LEFT_IN1_PIN1 33
@@ -90,8 +90,8 @@ int linesensors_pins[TOTAL_LINE_SENSORS] = {LINE_SENSOR_1_PIN, LINE_SENSOR_2_PIN
 LineSensors lineSensors(TOTAL_LINE_SENSORS);
 float sensorsReadings[TOTAL_LINE_SENSORS];
 Point2D linePosition;
-//Path checkpointPath;
-//Map checkpointMap;
+Path checkpointPath;
+Map checkpointMap;
 //CheckPointDirection checkpointDirection;
 
 SteeringController steeringController(255.0f, 0.0f, -255.0f);
@@ -104,7 +104,7 @@ float LineColorOlyCalibrationAvarages[TOTAL_LINE_SENSORS] = {
   4095.0f, 4067.0f, 3923.0f, 4095.0f, 4095.0f
 };
 
-/*
+
 void setMap(){
   Checkpoint checkPoint;
 	CheckPointDirection direction;
@@ -157,7 +157,7 @@ void setMap(){
   checkpointPath = checkpointMap.findPath(8);
 }
 
-*/
+
 void setup()
 {
   Serial.begin(9600);
@@ -185,7 +185,7 @@ void setup()
   lineSensors.setPins(linesensors_pins, TOTAL_LINE_SENSORS);
   lineSensors.SetBackgroundColorOnlyCalibrationAvarages(BackgroundColorOnlyCalibrationAvarages);
   lineSensors.SetLineColorOlyCalibrationAvarages(LineColorOlyCalibrationAvarages);
-  //setMap();
+  setMap();
 }
 
 float speed = 0.5f;

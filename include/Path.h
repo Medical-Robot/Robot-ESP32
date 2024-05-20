@@ -143,6 +143,12 @@ public:
 		}
 	}
 
+	void operator=(const Path& C) { 
+        this->checkPoints = C.checkPoints; 
+		this->previousCheckPoint = C.previousCheckPoint; 
+		this->nextCheckPoint = C.nextCheckPoint;
+    } 
+
 private:
 	std::vector<PathCheckpoint> checkPoints;
 	PathCheckpoint previousCheckPoint;
