@@ -6,22 +6,22 @@
 #elif defined(ESP8266)
 #include <ESP8266WiFi.h>
 #endif
-#include <Firebase_ESP_Client.h>
+//#include <Firebase_ESP_Client.h>
 #include <Wire.h>
 #include <array>
 #include <vector>
 // Provide the token generation process info.
-#include "addons/TokenHelper.h"
+//#include "addons/TokenHelper.h"
 // Provide the RTDB payload printing info and other helper functions.
-#include "addons/RTDBHelper.h"
+//#include "addons/RTDBHelper.h"
 #include <ArduinoJson-v6.21.5.h>
-#define WIFI_SSID "Off Limits2"
-#define WIFI_PASSWORD "J7s2tzvzKzva"
+//#define WIFI_SSID "Off Limits2"
+//#define WIFI_PASSWORD "J7s2tzvzKzva"
 #define FIREBASE_HOST "https://firestore.googleapis.com"
 #define FIREBASE_PROJECT_ID "pharmalinker2"
 #define FIREBASE_COLLECTION_PATH "map"
-//#define WIFI_SSID "qwert"
-//#define WIFI_PASSWORD "3141592653589"
+#define WIFI_SSID "qwert"
+#define WIFI_PASSWORD "3141592653589"
 
 #define I2C_SCL_PIN 21
 #define I2C_SDA_PIN 22
