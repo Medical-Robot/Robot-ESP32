@@ -1,0 +1,8 @@
+BlackLine sensor;                       16lei;          https://www.sigmanortec.ro/Modul-Urmarire-Linie-5-Canale-cu-bumper-TRCR5000-p172447718?gad_source=1&gclid=CjwKCAjwr7ayBhAPEiwA6EIGxHi_DldbSLLrijbqvoq00dbI4NExYaYeTfXTWSTvK7-Aurr-gTqObxoCLjwQAvD_BwE
+Arduino Uno Rev3 SMD;                   133lei;         https://www.robofun.ro/arduino-uno-rev3-smd.html?gad_source=1&gclid=CjwKCAjwr7ayBhAPEiwA6EIGxG3tM-8sx2XmcCH1OijLoD9igMein6dd3v0S67QAVgEkxuwEZKbgKBoCj6gQAvD_BwE
+ESP32;                                  40lei           https://www.sigmanortec.ro/placa-dezvoltare-esp32-cu-wifi-si-bluetooth?gad_source=1&gclid=CjwKCAjwr7ayBhAPEiwA6EIGxGgOPFtzkf2h7yXSDMpNJpRpx8p2D2XS1jjk3ajQuoWYXQBjj877SxoCJMoQAvD_BwE
+KIT MODUL RFID 13.56MHZ, RC522, 3.3V;   12lei;          https://www.sigmanortec.ro/Kit-modul-RFID-13-56-MHz-p126025377?gad_source=1&gclid=CjwKCAjwr7ayBhAPEiwA6EIGxJxUy0P1iS0d_5Xo-hLsderepGpktFUIdbccOWPcqP2B4dEGsbcYfhoCAAoQAvD_BwE
+7.2v battery;                           135lei;         https://www.emag.ro/baterie-7-2v-2400mah-ni-mh-aa-cu-sm-2p-2pin-plug-pentru-rc-truck-cars-b09l84rpt8/pd/DM4GKFMBM/?cmpid=101174&utm_source=google&utm_medium=cpc&utm_content=79559765994&utm_campaign=(RO:Whoop!)_3P-Y_%3e_Aparate_foto_and_accesorii_order_test&gad_source=1&gclid=CjwKCAjwr7ayBhAPEiwA6EIGxPz7TCfpWFwVgtfyUdzz2yXdjaCtEed8VSSiCPbvHRfa8C64iz8vUxoCm8MQAvD_BwE 
+Kit platforma sasiu robot cu 4 motoare; 80lei;          https://www.emag.ro/kit-platforma-sasiu-robot-cu-4-motoare-40938/pd/D4MJTWMBM/?cmpid=102119&utm_source=google&utm_medium=cpc&utm_campaign=(RO:eMAG!)_-_3P_-_New_Offers_ASP_above_30&utm_content=155746504995&gad_source=1&gclid=CjwKCAjwr7ayBhAPEiwA6EIGxP7ifymtA4jeYbGUbABSe9uM8XwB4r5JxinTt4fp2-KaqXgg5yryWRoCIawQAvD_BwE
+
+
