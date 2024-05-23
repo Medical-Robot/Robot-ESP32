@@ -8,6 +8,11 @@
 #define MOTORS_RIGHT_IN3_PIN1 26
 #define MOTORS_RIGHT_IN4_PIN2 27
 
+#define RST_PIN 0
+#define SS_PIN 5
+
+#include <SPI.h>
+#include <MFRC522.h>
 #include <Path.h>
 #include <Map.h>
 #include <intersectionSteeringLogic.h>
@@ -21,6 +26,8 @@
 #include <Firebase_ESP_Client.h>
 #include <ArduinoJson-v6.21.5.h>
 #endif
+
+MFRC522 mfrc522(SS_PIN, RST_PIN);
 
 // #define WIFI_SSID "qwert"
 // #define WIFI_PASSWORD "31415926"
@@ -382,6 +389,34 @@ void preiaComandaNoua()
   Serial.println("Succesfull reading from DB.");
 }
 
+byte *readRFID()
+{
+  static byte cardUID[4] = {0, 0, 0, 0}; // Stocăm UID-ul cardului aici
+
+  if (!mfrc522.PICC_IsNewCardPresent())
+  {
+    return NULL; // Nu există card nou
+  }
+
+  // Selectăm unul dintre carduri
+  if (!mfrc522.PICC_ReadCardSerial())
+  {
+    return NULL; // Eroare la citirea cardului
+  }
+
+  // Copiem UID-ul cardului în variabila noastră
+  for (byte i = 0; i < 4; i++)
+  {
+    cardUID[i] = mfrc522.uid.uidByte[i];
+  }
+
+  // Oprim comunicarea cu cardul
+  mfrc522.PICC_HaltA();
+
+  // Returnăm UID-ul cardului
+  return cardUID;
+}
+
 void comandaCompletata()
 {
 }
@@ -417,6 +452,11 @@ void setup()
   while (!Serial) {
     delay(100);
   }*/
+
+  SPI.begin();        // Init SPI bus
+  mfrc522.PCD_Init(); // Init MFRC522
+  delay(4);           // Optional delay. Some board do need more time after init to be ready, see Readme
+  mfrc522.PCD_DumpVersionToSerial();
 
   pinMode(MOTORS_LEFT_IN1_PIN1, OUTPUT);
   pinMode(MOTORS_LEFT_IN2_PIN2, OUTPUT);
@@ -486,27 +526,10 @@ int echeckpoint_direction_error = 0;
 
 void loop()
 {
-  std::vector<Checkpoint> checkPoints;
+  byte *cardUID = readRFID();
+  std::vector<Checkpoint>checkPoints;
   preiaComandaNoua();
   checkPoints = mapPathCheckpoint.getCheckPoints();
-  Serial.print("MARIME VECTOR: ");
-  Serial.println(checkPoints.size());
-
-  for (int i = 0; i <= 6; i++)
-  {
-    Serial.print("Checkpoint ids for document path ");
-    Serial.print(i + 1);
-    Serial.println(":");
-    Serial.print("back_id: ");
-    Serial.println(checkPoints[i].back_id);
-    Serial.print("front_id: ");
-    Serial.println(checkPoints[i].front_id);
-    Serial.print("left_id: ");
-    Serial.println(checkPoints[i].left_id);
-    Serial.print("right_id: ");
-    Serial.println(checkPoints[i].right_id);
-    delay(1000);
-  }
 
   // sendStateToCLoud();
 
@@ -537,8 +560,9 @@ void loop()
       if (comandaMedicamente.parmacieCheckpointId == checkPointPath.getDestinationCheckpointId())
       {
         // arrived at the pharmacy
-        steeringController.write(0.0f, 1.0f, 1.0f);
+        steeringController.write(0.0f, 0.0f, 0.0f);
         /*scan medicaments*/
+        byte *cardUID = readRFID();
 
         // go to the pacient
         mapPathCheckpoint.setNextCheckPoint(checkPointPath.getNextCheckPoint().id);
@@ -547,9 +571,10 @@ void loop()
       }
       else if (comandaMedicamente.destinationCheckpointId == checkPointPath.getDestinationCheckpointId())
       {
-        steeringController.write(0.0f, 1.0f, 1.0f);
+        steeringController.write(0.0f, 0.0f, 0.0f);
         // arrived at the pacient
         /*do someting when arrived at the pacient*/
+        //TO DO: ADD AND COMPARE THE UID WHICH EVERY CARD HAS
       }
     }
 
