@@ -22,13 +22,14 @@
 #include <ArduinoJson-v6.21.5.h>
 #endif
 
-#define WIFI_SSID "qwert"
-#define WIFI_PASSWORD "31415926"
-// #define WIFI_SSID "Off Limits2"
-// #define WIFI_PASSWORD "J7s2tzvzKzva"
+// #define WIFI_SSID "qwert"
+// #define WIFI_PASSWORD "31415926"
+#define WIFI_SSID "Off Limits2"
+#define WIFI_PASSWORD "J7s2tzvzKzva"
 #define FIREBASE_HOST "https://firestore.googleapis.com"
 #define FIREBASE_PROJECT_ID "pharmalinker2"
 #define FIREBASE_COLLECTION_PATH "map"
+// #define FIREBASE_API_KEY "AIzaSyBtzlSH-aTnBYVfFXhPXAWFhXn1A8Cd6U4"
 #define FIREBASE_API_KEY "AIzaSyDhs5wDN_j-u1jwX426LxOtRF2tJPmeJeg"
 #define FIREBASE_DATABASE_URL "https://pharmalinker2-default-rtdb.europe-west1.firebasedatabase.app/"
 
@@ -113,6 +114,7 @@ Point2D linePosition;
 Path checkPointPath;
 CheckPointDirection checkpointDirection;
 ComandaMedicamente comandaMedicamente;
+Map mapPathCheckpoint;
 
 SteeringController steeringController(255.0f, 0.0f, -255.0f);
 
@@ -201,7 +203,7 @@ String getFirestoreData(const String &documentPath)
   return payload;
 }
 
-void preiaComandaNoua(Map &mapPathCheckpoint)
+void preiaComandaNoua()
 {
   int i;
   String documentPath;
@@ -211,7 +213,7 @@ void preiaComandaNoua(Map &mapPathCheckpoint)
   StaticJsonDocument<1024> jsonDoc;
   JsonObject root, fields;
 
-  for (i = 1; i <= 9; i++)
+  for (i = 1; i <= 8; i++)
   {
     switch (i)
     {
@@ -377,6 +379,7 @@ void preiaComandaNoua(Map &mapPathCheckpoint)
       break;
     }
   }
+  Serial.println("Succesfull reading from DB.");
 }
 
 void comandaCompletata()
@@ -392,7 +395,7 @@ void getInitialConfigsFromCloud()
   if (comandaMedicamente.status == ComandaMedicamenteStatus::STATUS_NONE)
   {
     // preia comanda din cloud
-    //preiaComandaNoua();
+    // preiaComandaNoua();
   }
 }
 
@@ -483,52 +486,29 @@ int echeckpoint_direction_error = 0;
 
 void loop()
 {
-  Map map;
   std::vector<Checkpoint> checkPoints;
-  preiaComandaNoua(map);
-  checkPoints = map.getCheckPoints();
+  preiaComandaNoua();
+  checkPoints = mapPathCheckpoint.getCheckPoints();
+  Serial.print("MARIME VECTOR: ");
+  Serial.println(checkPoints.size());
 
-  Serial.print("Checkpoint ids for document path ");
-        Serial.print(1);
-        Serial.println(":");
-        Serial.print("back_id: ");
-        Serial.println(checkPoints[0].back_id);
-        Serial.print("front_id: ");
-        Serial.println(checkPoints[0].front_id);
-        Serial.print("left_id: ");
-        Serial.println(checkPoints[0].left_id);
-        Serial.print("right_id: ");
-        Serial.println(checkPoints[0].right_id);
-        delay(1000);
+  for (int i = 0; i <= 6; i++)
+  {
+    Serial.print("Checkpoint ids for document path ");
+    Serial.print(i + 1);
+    Serial.println(":");
+    Serial.print("back_id: ");
+    Serial.println(checkPoints[i].back_id);
+    Serial.print("front_id: ");
+    Serial.println(checkPoints[i].front_id);
+    Serial.print("left_id: ");
+    Serial.println(checkPoints[i].left_id);
+    Serial.print("right_id: ");
+    Serial.println(checkPoints[i].right_id);
+    delay(1000);
+  }
 
-  // if (!checkPoints.empty())
-  // {
-  //   for (int i = 0; i <= 9; i++)
-  //   {
-
-  //     if (checkPoints[i].id == 1 || checkPoints[i].id == 2 || checkPoints[i].id == 3 ||
-  //         checkPoints[i].id == 5 || checkPoints[i].id == 6 || checkPoints[i].id == 7 ||
-  //         checkPoints[i].id == 8)
-  //     {
-
-  //       Serial.print("Checkpoint ids for document path ");
-  //       Serial.print(i + 1);
-  //       Serial.println(":");
-  //       Serial.print("back_id: ");
-  //       Serial.println(checkPoints[i].back_id);
-  //       Serial.print("front_id: ");
-  //       Serial.println(checkPoints[i].front_id);
-  //       Serial.print("left_id: ");
-  //       Serial.println(checkPoints[i].left_id);
-  //       Serial.print("right_id: ");
-  //       Serial.println(checkPoints[i].right_id);
-  //       delay(1000);
-  //     }
-  //   }
-  // }else{
-  //   Serial.println("No checkpoints found in the path.");
-  // }
-  //sendStateToCLoud();
+  // sendStateToCLoud();
 
   lineSensors.read();
   middleLineMax = lineSensors.getMaxValue();
@@ -561,9 +541,9 @@ void loop()
         /*scan medicaments*/
 
         // go to the pacient
-        map.setNextCheckPoint(checkPointPath.getNextCheckPoint().id);
-        map.setPreviousCheckPoint(checkPointPath.getPreviousCheckpoint().id);
-        checkPointPath = map.findPath(comandaMedicamente.destinationCheckpointId);
+        mapPathCheckpoint.setNextCheckPoint(checkPointPath.getNextCheckPoint().id);
+        mapPathCheckpoint.setPreviousCheckPoint(checkPointPath.getPreviousCheckpoint().id);
+        checkPointPath = mapPathCheckpoint.findPath(comandaMedicamente.destinationCheckpointId);
       }
       else if (comandaMedicamente.destinationCheckpointId == checkPointPath.getDestinationCheckpointId())
       {
