@@ -11,4 +11,4 @@ BREADBOARD 400 PUNCTE;                  8lei;           https://www.sigmanortec.
 40 FIRE DUPONT 30CM, MAMA-MAMA;         8lei;           https://www.sigmanortec.ro/40-Fire-Dupont-30cm-Mama-Mama-p126421578
 PUNTE H DUBLA L298N;                    13lei;          https://www.sigmanortec.ro/Punte-H-Dubla-L298N-p125423236?gad_source=1&gclid=CjwKCAjwr7ayBhAPEiwA6EIGxM2q-JfPSqg0MVVJ9lhhsZ7N-t1Y2OJbpCWOg_2aHkkCicU2-YgwzhoCtJIQAvD_BwE
 INTRERUPATOR 3A 250V SWITCH MTS-102;    4lei;           https://www.sigmanortec.ro/Intrerupator-3A-250V-Switch-MTS-102-p140901357?gad_source=1&gclid=CjwKCAjwr7ayBhAPEiwA6EIGxK87p7PvcZbL9t1k_1XpyczCR3-u_E4oO4fUiGTiTXcv-22LeqvvJBoCNzkQAvD_BwE
-
+20xCARD RFID S50 13.56MHZ               20lei;           https://www.sigmanortec.ro/Card-RFID-S50-13-56MHz-reinscriptionabil-p126025314?gad_source=1&gclid=Cj0KCQjw0ruyBhDuARIsANSZ3wqh8ZxRrgl53p6N8bjhoL6U3mt9qbNWv52SnaGKvuVITiDSBz4TpTMaAsYSEALw_wcB
