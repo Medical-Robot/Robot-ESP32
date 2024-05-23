@@ -1,11 +1,9 @@
 #include <Arduino.h>
 #define ENABLE_ARDUINO 1
-
-#define MOTORS_LEFT_IN1_PIN1 6
-#define MOTORS_LEFT_IN2_PIN2 5
-
-#define MOTORS_RIGHT_IN3_PIN1 9
-#define MOTORS_RIGHT_IN4_PIN2 3
+#define MOTORS_LEFT_IN1_PIN1 33
+#define MOTORS_LEFT_IN2_PIN2 25
+#define MOTORS_RIGHT_IN3_PIN1 26
+#define MOTORS_RIGHT_IN4_PIN2 27
 
 #include <SteeringController.h>
 
@@ -33,5 +31,5 @@ void setup()
 
 void loop()
 {
-  steeringController.write(1.0f, -1.0f, 1.0f);
+  steeringController.write(1.0f, 1.0f, 1.0f);
 }
