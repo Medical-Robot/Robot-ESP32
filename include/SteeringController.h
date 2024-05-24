@@ -164,38 +164,38 @@ class SteeringController : public BaseSteeringController
 public:
 	SteeringController(float max_forward_raw_value, float stand_still_speed_raw_value, float max_backward_raw_value) : BaseSteeringController(max_forward_raw_value, stand_still_speed_raw_value, max_backward_raw_value){};
 	
-	virtual void writeLeftTrackMotor() {
-		if (this->LeftTrackIsStandingStill == true) {
-			#if ENABLE_ARDUINO == 1
-				moveForward(MOTORS_RIGHT_IN1_PIN1, MOTORS_RIGHT_IN2_PIN2, (int)(this->LeftTrackSpeed));
-			#endif // ENABLE_ARDUINO == 1
-		}
-		else if (this->LeftTrackIsGoingForward == true) {
-			#if ENABLE_ARDUINO == 1
-				moveForward(MOTORS_RIGHT_IN1_PIN1, MOTORS_RIGHT_IN2_PIN2, (int)(this->LeftTrackSpeed));
-			#endif // ENABLE_ARDUINO == 1
-		}
-		else if (this->LeftTrackIsGoingBackward == true) {
-			#if ENABLE_ARDUINO == 1
-				moveBackward(MOTORS_RIGHT_IN1_PIN1, MOTORS_RIGHT_IN2_PIN2, (int)(this->LeftTrackSpeed));
-			#endif // ENABLE_ARDUINO == 1
-		}
-	}
-
 	virtual void writeRightTrackMotor() {
 		if (this->RightTrackIsStandingStill == true) {
 			#if ENABLE_ARDUINO == 1
-				moveForward(MOTORS_LEFT_IN3_PIN1, MOTORS_LEFT_IN4_PIN2, (int)(this->RightTrackSpeed));
+				moveForward(MOTORS_RIGHT_IN1_PIN1, MOTORS_RIGHT_IN2_PIN2, (int)(this->RightTrackSpeed));
 			#endif // ENABLE_ARDUINO == 1
 		}
 		else if (this->RightTrackIsGoingForward == true) {
 			#if ENABLE_ARDUINO == 1
-				moveForward(MOTORS_LEFT_IN3_PIN1, MOTORS_LEFT_IN4_PIN2, (int)(this->RightTrackSpeed));
+				moveForward(MOTORS_RIGHT_IN1_PIN1, MOTORS_RIGHT_IN2_PIN2, (int)(this->RightTrackSpeed));
 			#endif // ENABLE_ARDUINO == 1
 		}
 		else if (this->RightTrackIsGoingBackward == true) {
 			#if ENABLE_ARDUINO == 1
-				moveBackward(MOTORS_LEFT_IN3_PIN1, MOTORS_LEFT_IN4_PIN2, (int)(this->RightTrackSpeed));
+				moveBackward(MOTORS_RIGHT_IN1_PIN1, MOTORS_RIGHT_IN2_PIN2, (int)(this->RightTrackSpeed));
+			#endif // ENABLE_ARDUINO == 1
+		}
+	}
+
+	virtual void writeLeftTrackMotor() {
+		if (this->LeftTrackIsStandingStill == true) {
+			#if ENABLE_ARDUINO == 1
+				moveForward(MOTORS_LEFT_IN3_PIN1, MOTORS_LEFT_IN4_PIN2, (int)(this->LeftTrackSpeed));
+			#endif // ENABLE_ARDUINO == 1
+		}
+		else if (this->LeftTrackIsGoingForward == true) {
+			#if ENABLE_ARDUINO == 1
+				moveForward(MOTORS_LEFT_IN3_PIN1, MOTORS_LEFT_IN4_PIN2, (int)(this->LeftTrackSpeed));
+			#endif // ENABLE_ARDUINO == 1
+		}
+		else if (this->LeftTrackIsGoingBackward == true) {
+			#if ENABLE_ARDUINO == 1
+				moveBackward(MOTORS_LEFT_IN3_PIN1, MOTORS_LEFT_IN4_PIN2, (int)(this->LeftTrackSpeed));
 			#endif // ENABLE_ARDUINO == 1
 		}
 	}

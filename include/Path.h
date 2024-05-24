@@ -48,6 +48,16 @@ public:
 			return;
 		}
 
+		if (this->nextCheckPoint.id == this->destinationCheckpointId)
+		{
+			this->destinationCheckpointId = true;
+			return;
+		}
+		else{
+			this->destinationCheckpointId = true;
+		}
+		
+
 		this->previousCheckPoint = this->nextCheckPoint;
 		temp_nextCheckPoint = this->findCheckPointById(this->previousCheckPoint.next_checkpoint_id);
 
@@ -85,24 +95,21 @@ public:
 		if (temp_ptr == NULL) {
 			return CheckPointDirection::NONE;
 		}
-		nextCheckpoint_temp = *temp_ptr;
+		nextCheckpoint_temp = this->previousCheckPoint;
 
 		if (nextCheckpoint_temp.back_id == checkpoint.id) {
+			temp = checkpoint.left_id;
+			checkpoint.left_id = checkpoint.right_id;
+			checkpoint.right_id = temp;
 
+			temp = checkpoint.front_id;
+			checkpoint.front_id = checkpoint.back_id;
+			checkpoint.back_id = temp;
 		}
 		else if (nextCheckpoint_temp.front_id == checkpoint.id) {
-			temp = checkpoint.left_id;
-			checkpoint.left_id = checkpoint.right_id;
-			checkpoint.right_id = temp;
 
-			temp = checkpoint.front_id;
-			checkpoint.front_id = checkpoint.back_id;
-			checkpoint.back_id = temp;
 		}
 		else if (nextCheckpoint_temp.left_id == checkpoint.id) {
-
-		}
-		else if (nextCheckpoint_temp.right_id == checkpoint.id) {
 			temp = checkpoint.front_id;
 			checkpoint.front_id = checkpoint.back_id;
 			checkpoint.back_id = temp;
@@ -110,6 +117,9 @@ public:
 			temp = checkpoint.left_id;
 			checkpoint.left_id = checkpoint.right_id;
 			checkpoint.right_id = temp;
+		}
+		else if (nextCheckpoint_temp.right_id == checkpoint.id) {
+
 		}
 
 		if (checkpoint.next_checkpoint_id == checkpoint.front_id) {
@@ -156,15 +166,11 @@ public:
 		this->previousCheckPoint = C.previousCheckPoint; 
 		this->nextCheckPoint = C.nextCheckPoint;
 		this->destinationCheckpointId = C.destinationCheckpointId;
+		this->destinationReached = C.destinationReached;
     }
 
 	bool reachedDestination(){
-		if(this->nextCheckPoint.id == this->destinationCheckpointId){
-			return true;
-		}
-		else{
-			return false;
-		}
+		return this->destinationReached;
 	}
 
 private:
@@ -172,6 +178,7 @@ private:
 	PathCheckpoint previousCheckPoint;
 	PathCheckpoint nextCheckPoint;
 	int destinationCheckpointId;
+	bool destinationReached;
 
 
 

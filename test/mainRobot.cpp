@@ -3,10 +3,10 @@
 // #include <queue>
 #include <LineSensors.h>
 #define ENABLE_ARDUINO 1
-#define MOTORS_LEFT_IN1_PIN1 33
-#define MOTORS_LEFT_IN2_PIN2 25
-#define MOTORS_RIGHT_IN3_PIN1 26
-#define MOTORS_RIGHT_IN4_PIN2 27
+#define MOTORS_RIGHT_IN1_PIN1 33
+#define MOTORS_RIGHT_IN2_PIN2 25
+#define MOTORS_LEFT_IN3_PIN1 26
+#define MOTORS_LEFT_IN4_PIN2 27
 
 #define RST_PIN 0
 #define SS_PIN 5
@@ -126,10 +126,12 @@ Map mapPathCheckpoint;
 SteeringController steeringController(255.0f, 0.0f, -255.0f);
 
 float BackgroundColorOnlyCalibrationAvarages[TOTAL_LINE_SENSORS] = {
-    1312.0f, 691.0f, 1006.0f, 1378.0f, 1491.0f};
+    1312.0f, 691.0f, 1006.0f, 1378.0f, 1491.0f
+  };
 
 float LineColorOlyCalibrationAvarages[TOTAL_LINE_SENSORS] = {
-    4095.0f, 4067.0f, 3923.0f, 4095.0f, 4095.0f};
+    4095.0f, 4067.0f, 3923.0f, 4095.0f, 4095.0f
+  };
 
 void setMap()
 {

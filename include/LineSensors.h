@@ -2,7 +2,7 @@
 #include <string.h>
 #include "PurePursuitGeometry.h"
 #include "cubic.c"
-#include "polyfit.h"
+#include "MovingAverage.h"
 
 class LineSensors
 {
@@ -15,6 +15,7 @@ public:
 		this->sensorXposition = new float[NumberOfSensors_];
 		this->sensorPins = new int[NumberOfSensors_];
 		this->LineSensorsRawValues = new float[NumberOfSensors_];
+		this->movingAverages = new MovingAverage[NumberOfSensors_];
 		for (size_t i = 0; i < NumberOfSensors_; i++)
 		{
 			this->sensorXposition[i] = i;
@@ -146,82 +147,6 @@ public:
 		//return middleLine;
 	}
 
-	void processSensors(float* sensorsReadings) {
-		float tempAverage;
-		float middleSensorDistance = (((float)this->NumberOfSensors - 1) / 2.0f);
-		int MaxValueSensorIndex;
-		int rVal, n_roots;
-		float polyfit_result[5];
-		float polyder_result[4];
-		float polyfit_max_roots[3];
-		ParabolaABC parabola;
-		Point2D middleLine = { -2.0f, -1.0f };
-		Point2D color_max, color_min, temp_point2d;
-		int isSetColor_max = 0, isSetColor_min = 0;
-		float* temp_LineColorSensorsPercentage = new float[this->NumberOfSensors+2];
-		float* temp_sensorXposition = new float[this->NumberOfSensors+2];
-
-		if (this->NumberOfSensors <= 0) {
-			//return middleLine;
-			return;
-		}
-		for (size_t i = 0; i < this->NumberOfSensors; i++) {
-			this->LineColorSensorsPercentage[i] = (sensorsReadings[i] - this->BackgroundColorOnlyCalibrationAvarages[i]) / (this->LineColorOlyCalibrationAvarages[i] - this->BackgroundColorOnlyCalibrationAvarages[i]);
-		}
-		/*
-		memcpy(&(temp_LineColorSensorsPercentage[1]), this->LineColorSensorsPercentage, this->NumberOfSensors * sizeof(float));
-		temp_LineColorSensorsPercentage[0] = 0.0f;
-		temp_LineColorSensorsPercentage[this->NumberOfSensors + 1] = 0.0f;
-
-		memcpy(&(temp_sensorXposition[1]), this->sensorXposition, this->NumberOfSensors * sizeof(float));
-		temp_sensorXposition[0] = -1.0f;
-		temp_sensorXposition[this->NumberOfSensors + 1] = (float)(this->NumberOfSensors);
-		*/
-		rVal = polyfit(this->NumberOfSensors, sensorXposition, LineColorSensorsPercentage, 5, polyfit_result);
-		polyder(polyfit_result, 5, polyder_result);
-		n_roots = solve_cubic(polyder_result[0], polyder_result[1], polyder_result[2], polyder_result[3], polyfit_max_roots);
-
-		for (size_t i = 0; i < n_roots; i++)
-		{
-			temp_point2d = polyval(polyfit_result, 4, polyfit_max_roots[i]);
-			if (isSetColor_max)
-			{
-				if (color_max.y < temp_point2d.y) {
-					color_max = temp_point2d;
-				}
-			}
-			else {
-				color_max = temp_point2d;
-				isSetColor_max = 1;
-			}
-
-			if (isSetColor_min)
-			{
-				if (color_min.y > temp_point2d.y) {
-					color_min = temp_point2d;
-				}
-			}
-			else {
-				color_min = temp_point2d;
-				isSetColor_min = 1;
-			}
-		}
-
-		middleLine = color_max;
-
-		max_value = color_max;
-		max_value.x = max_value.x - middleSensorDistance;
-		max_value.x = max_value.x / middleSensorDistance;
-
-		min_value = color_min;
-		min_value.x = min_value.x - middleSensorDistance;
-		min_value.x = min_value.x / middleSensorDistance;
-
-		middleLine.x = middleLine.x - middleSensorDistance;
-		middleLine.x = middleLine.x / middleSensorDistance;
-
-		//return middleLine;
-	}
 	~LineSensors() {
 		delete this->BackgroundColorOnlyCalibrationAvarages;
 		delete this->LineColorOlyCalibrationAvarages;
@@ -229,6 +154,7 @@ public:
 		delete this->sensorXposition;
 		delete this->sensorPins;
 		delete this->LineSensorsRawValues;
+		delete this->movingAverages;
 	}
 	Point2D getMaxValue() {
 		return max_value;
@@ -245,7 +171,8 @@ public:
 
 	void readSensors(float* sensorsReadings){
 		for (size_t i = 0; i < NumberOfSensors; i++) {
-			sensorsReadings[i] = (float)analogRead(this->sensorPins[i]);
+			
+			sensorsReadings[i] = this->movingAverages[i].next((float)analogRead(this->sensorPins[i]));
 			//Serial.print(sensorsReadings[i]);
 			//Serial.print('\t');
 		}
@@ -266,8 +193,10 @@ private:
 	float* LineColorSensorsPercentage = nullptr;
 	float* sensorXposition = nullptr;
 	int* sensorPins = nullptr;
+	MovingAverage* movingAverages = nullptr;
 	Point2D max_value;
 	Point2D min_value;
+
 
 
 	int MaxValueIndexFloatArray(float* arr, size_t arraySize) {

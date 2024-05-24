@@ -152,6 +152,7 @@ int bfs(std::vector<Checkpoint>& graph, int source_node_id, std::vector<int>& pa
 			}
 		}
 	}
+	return 0;
 }
 
 // Function to print the shortest distance between source
