@@ -2,7 +2,7 @@
 #include <SteeringController.h>
 #include <LineSensors.h>
 
-static void takeRight(float speed, SteeringController& steeringController, LineSensors& lineSensor, float blackThreshold){
+template <class T> static void takeRight(float speed, T& steeringController, LineSensors& lineSensor, float blackThreshold){
     uint32_t startTime;
     speed = 0.8f;
     /*
@@ -85,7 +85,7 @@ static void takeRight(float speed, SteeringController& steeringController, LineS
 }
 
 
-static void takeLeft(float speed, SteeringController& steeringController, LineSensors& lineSensor, float blackThreshold){
+template <class T> static void takeLeft(float speed, T& steeringController, LineSensors& lineSensor, float blackThreshold){
     do {
         steeringController.write(speed, -1.0f, 1.0f);
         lineSensor.read();

@@ -12,15 +12,11 @@
 	void moveBackward(int pin1, int pin2, int val) {
 		analogWrite(pin1, val);
 		analogWrite(pin2, LOW);
-		//Serial.print("backward: ");
-		//Serial.println(val);
 	}
 
 	void moveForward(int pin1, int pin2, int val) {
 		analogWrite(pin1, LOW);
 		analogWrite(pin2, val);
-		//Serial.print("forward: ");
-		//Serial.println(val);
 	}
 #endif // ENABLE_ARDUINO == 1
 
@@ -128,11 +124,18 @@ public:
 			RightTrackIsGoingBackward = true;
 		}
 
-		LeftTrackSpeed = abs(temp_LeftTrackSpeed);
-		RightTrackSpeed = abs(temp_RightTrackSpeed);
+		LeftTrackSpeed = temp_LeftTrackSpeed;
+		RightTrackSpeed = temp_RightTrackSpeed;
 	}
 
-	void write(float speed_percentage, float left_track_percentage, float right_track_percentage) {
+	virtual void write(float speed_percentage, float left_track_percentage, float right_track_percentage) {
+		speed_percentage = MIN(speed_percentage, 1.0f);
+		speed_percentage = MAX(speed_percentage, -1.0f);
+		left_track_percentage = MIN(left_track_percentage, 1.0f);
+		left_track_percentage = MAX(left_track_percentage, -1.0f);
+		right_track_percentage = MIN(right_track_percentage, 1.0f);
+		right_track_percentage = MAX(right_track_percentage, -1.0f);
+		
 		this->calculateSteering(speed_percentage, left_track_percentage, right_track_percentage);
 
 		#if BaseSteeringController_ENABLE_PURE_VIRTUAL_FUNCTIONS == 1
@@ -163,42 +166,51 @@ class SteeringController : public BaseSteeringController
 {
 public:
 	SteeringController(float max_forward_raw_value, float stand_still_speed_raw_value, float max_backward_raw_value) : BaseSteeringController(max_forward_raw_value, stand_still_speed_raw_value, max_backward_raw_value){};
-	
-	virtual void writeRightTrackMotor() {
-		if (this->RightTrackIsStandingStill == true) {
-			#if ENABLE_ARDUINO == 1
-				moveForward(MOTORS_RIGHT_IN1_PIN1, MOTORS_RIGHT_IN2_PIN2, (int)(this->RightTrackSpeed));
-			#endif // ENABLE_ARDUINO == 1
-		}
-		else if (this->RightTrackIsGoingForward == true) {
-			#if ENABLE_ARDUINO == 1
-				moveForward(MOTORS_RIGHT_IN1_PIN1, MOTORS_RIGHT_IN2_PIN2, (int)(this->RightTrackSpeed));
-			#endif // ENABLE_ARDUINO == 1
-		}
-		else if (this->RightTrackIsGoingBackward == true) {
-			#if ENABLE_ARDUINO == 1
-				moveBackward(MOTORS_RIGHT_IN1_PIN1, MOTORS_RIGHT_IN2_PIN2, (int)(this->RightTrackSpeed));
-			#endif // ENABLE_ARDUINO == 1
-		}
+	void attach(int left_1, int left_2, int right_3, int right_4){
+		this->motors_left_in1 = left_1;
+		this->motors_left_in2 = left_2;
+		this->motors_right_in3 = right_3;
+		this->motors_right_in4 = right_4;
 	}
-
 	virtual void writeLeftTrackMotor() {
 		if (this->LeftTrackIsStandingStill == true) {
 			#if ENABLE_ARDUINO == 1
-				moveForward(MOTORS_LEFT_IN3_PIN1, MOTORS_LEFT_IN4_PIN2, (int)(this->LeftTrackSpeed));
+				moveForward(this->motors_left_in1, this->motors_left_in2, (int)(this->LeftTrackSpeed));
 			#endif // ENABLE_ARDUINO == 1
 		}
 		else if (this->LeftTrackIsGoingForward == true) {
 			#if ENABLE_ARDUINO == 1
-				moveForward(MOTORS_LEFT_IN3_PIN1, MOTORS_LEFT_IN4_PIN2, (int)(this->LeftTrackSpeed));
+				moveForward(this->motors_left_in1, this->motors_left_in2, (int)(this->LeftTrackSpeed));
 			#endif // ENABLE_ARDUINO == 1
 		}
 		else if (this->LeftTrackIsGoingBackward == true) {
 			#if ENABLE_ARDUINO == 1
-				moveBackward(MOTORS_LEFT_IN3_PIN1, MOTORS_LEFT_IN4_PIN2, (int)(this->LeftTrackSpeed));
+				moveBackward(this->motors_left_in1, this->motors_left_in2, (int)(this->LeftTrackSpeed));
+			#endif // ENABLE_ARDUINO == 1
+		}
+	}
+
+	virtual void writeRightTrackMotor() {
+		if (this->RightTrackIsStandingStill == true) {
+			#if ENABLE_ARDUINO == 1
+				moveForward(this->motors_right_in3, this->motors_right_in4, (int)(this->RightTrackSpeed));
+			#endif // ENABLE_ARDUINO == 1
+		}
+		else if (this->RightTrackIsGoingForward == true) {
+			#if ENABLE_ARDUINO == 1
+				moveForward(this->motors_right_in3, this->motors_right_in4, (int)(this->RightTrackSpeed));
+			#endif // ENABLE_ARDUINO == 1
+		}
+		else if (this->RightTrackIsGoingBackward == true) {
+			#if ENABLE_ARDUINO == 1
+				moveBackward(this->motors_right_in3, this->motors_right_in4, (int)(this->RightTrackSpeed));
 			#endif // ENABLE_ARDUINO == 1
 		}
 	}
 
 private:
+	int motors_left_in1;
+	int motors_left_in2;
+	int motors_right_in3;
+	int motors_right_in4;
 };
