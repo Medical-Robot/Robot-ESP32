@@ -124,18 +124,19 @@ public:
 			RightTrackIsGoingBackward = true;
 		}
 
-		LeftTrackSpeed = temp_LeftTrackSpeed;
-		RightTrackSpeed = temp_RightTrackSpeed;
+		LeftTrackSpeed = abs(temp_LeftTrackSpeed);
+		RightTrackSpeed = abs(temp_RightTrackSpeed);
 	}
 
-	virtual void write(float speed_percentage, float left_track_percentage, float right_track_percentage) {
+	void write(float speed_percentage, float left_track_percentage, float right_track_percentage) {
+		/*
 		speed_percentage = MIN(speed_percentage, 1.0f);
 		speed_percentage = MAX(speed_percentage, -1.0f);
 		left_track_percentage = MIN(left_track_percentage, 1.0f);
 		left_track_percentage = MAX(left_track_percentage, -1.0f);
 		right_track_percentage = MIN(right_track_percentage, 1.0f);
 		right_track_percentage = MAX(right_track_percentage, -1.0f);
-		
+		*/
 		this->calculateSteering(speed_percentage, left_track_percentage, right_track_percentage);
 
 		#if BaseSteeringController_ENABLE_PURE_VIRTUAL_FUNCTIONS == 1
