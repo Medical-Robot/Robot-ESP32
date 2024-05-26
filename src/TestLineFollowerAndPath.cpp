@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <LineSensors.h>
+#include <SerialPortSteeringController.h>
 #define ENABLE_ARDUINO 1
 #define MOTORS_RIGHT_IN1_PIN1 33
 #define MOTORS_RIGHT_IN2_PIN2 25
@@ -40,6 +41,7 @@ Path checkPointPath;
 CheckPointDirection checkpointDirection;
 ComandaMedicamente comandaMedicamente;
 Map mapPathCheckpoint;
+SoftwareSerialPortSteeringController softwareSerialPortSteeringController;
 
 
 const float PID_Kp = 1.0f;
@@ -153,6 +155,8 @@ float PID_out_right, PID_out_left;
 Point2D middleLineMax, middleLineMin;
 float blackLinePositionX, blackLinePositionY;
 int echeckpoint_direction_error;
+
+
 
 void loop()
 {
