@@ -4,7 +4,6 @@
 
 Path checkPointPath;
 Map mapPathCheckpoint;
-Path checkPointPath;
 CheckPointDirection checkpointDirection;
 
 
@@ -66,6 +65,12 @@ void setMap()
 
 int main() {
 	setMap();
+	checkpointDirection = checkPointPath.getNextDirection();
+	checkPointPath.goNextCheckPoint();
+	checkpointDirection = checkPointPath.getNextDirection();
+	checkPointPath.goNextCheckPoint();
+	checkpointDirection = checkPointPath.getNextDirection();
+	checkPointPath.goNextCheckPoint();
 	checkpointDirection = checkPointPath.getNextDirection();
 	checkPointPath.goNextCheckPoint();
 	return 0;
