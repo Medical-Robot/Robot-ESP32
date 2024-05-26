@@ -137,6 +137,7 @@ float PID_out_right, PID_out_left;
 Point2D middleLineMax, middleLineMin;
 float blackLinePositionX, blackLinePositionY;
 int echeckpoint_direction_error;
+String toArduino;
 
 void loop()
 {
@@ -271,5 +272,8 @@ Pos_x: -1   Left: -1    Right: +1
   Serial.print("right_track:" + String(right_track_speed_cercentage));
 
   Serial.println();
-  steeringController.write(speed, left_track_speed_cercentage, right_track_speed_cercentage);
+
+  toArduino = String(speed) + ";"+ String(left_track_speed_cercentage) + ";" + String(right_track_speed_cercentage);
+  serial_soft1.print(toArduino);
+  //steeringController.write(speed, left_track_speed_cercentage, right_track_speed_cercentage);
 }
