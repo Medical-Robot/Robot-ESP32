@@ -1,4 +1,6 @@
 #include <SoftwareSerial.h>
+#include <Firebase_ESP_Client.h>
+#include <BLEDevice.h>
 
 
 SoftwareSerial serial_soft1(4,5);

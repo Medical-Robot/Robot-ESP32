@@ -37,9 +37,12 @@
 //D3 E8 A2 0E
 #include <SPI.h>
 #include <MFRC522.h>
+#include <Firebase_ESP_Client.h>
+#include <BLEDevice.h>
 
-#define RST_PIN         8          // Configurable, see typical pin layout above
-#define SS_PIN          10         // Configurable, see typical pin layout above
+
+#define RST_PIN         0          // Configurable, see typical pin layout above
+#define SS_PIN          21         // Configurable, see typical pin layout above
 
 MFRC522 mfrc522(SS_PIN, RST_PIN);  // Create MFRC522 instance
 
