@@ -137,9 +137,15 @@ public:
 			}
 		}
 
+		middleLine.x = MaxValueSensorIndex;
+		middleLine.y = this->LineColorSensorsPercentage[MaxValueSensorIndex];
+
 		middleLine.x = middleLine.x - middleSensorDistance;
 		middleLine.x = middleLine.x / middleSensorDistance;
 		max_value = middleLine;
+
+		min_value_temp.x = MinValueSensorIndex;
+		min_value_temp.y = this->LineColorSensorsPercentage[MinValueSensorIndex];
 
 		min_value_temp.x = min_value_temp.x - middleSensorDistance;
 		min_value_temp.x = min_value_temp.x / middleSensorDistance;

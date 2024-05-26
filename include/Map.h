@@ -10,10 +10,10 @@
 #define CHECKPOINT_SIZE 20
 typedef struct Checkpoint_s {
 	int id;
-	int left_id;
-	int right_id;
-	int front_id;
-	int back_id;
+	int left_id;	// in
+	int right_id;	// out
+	int front_id;	// out
+	int back_id;	// in
 }Checkpoint;
 
 struct bfs_checkpoint {
