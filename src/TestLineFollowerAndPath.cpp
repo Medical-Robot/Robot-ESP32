@@ -27,6 +27,7 @@
 #include <intersectionSteeringLogic.h>
 #include <SteeringController.h>
 #include <dataStructures.h>
+#include <BLEDevice.h>
 
 #define BLACK_COLOR_THRESHOLD 0.30f
 
@@ -41,7 +42,8 @@ Path checkPointPath;
 CheckPointDirection checkpointDirection;
 ComandaMedicamente comandaMedicamente;
 Map mapPathCheckpoint;
-SoftwareSerialPortSteeringController softwareSerialPortSteeringController;
+SoftwareSerial serial_soft1(4, 5); // RX TX 16, 17 NU MERG
+SoftwareSerialPortSteeringController softwareSerialPortSteeringController(serial_soft1, 255.0f, 0.0f, -255.0f);
 
 
 const float PID_Kp = 1.0f;
@@ -120,6 +122,7 @@ void setMap()
 void setup()
 {
   Serial.begin(9600);
+  serial_soft1.begin(9600);
   /*
   while (!Serial) {
     delay(100);
