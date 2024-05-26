@@ -32,7 +32,7 @@ public:
         this->serialPort_software.print(left_track_percentage);
         this->serialPort_software.print(';');
         this->serialPort_software.print(right_track_percentage);
-        this->serialPort_software.print('\r\n');
+        this->serialPort_software.print("\r\n");
     }
 private:
     SoftwareSerial& serialPort_software;

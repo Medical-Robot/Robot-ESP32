@@ -2,7 +2,6 @@
 #include <Wire.h>
 #include <HardwareSerial.h>
 #include <SoftwareSerial.h>
-
 #include <LineSensors.h>
 
 #if defined(ESP32)
