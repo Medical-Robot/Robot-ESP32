@@ -1,8 +1,6 @@
 #include <Arduino.h>
-#include <Wire.h>
-#include <HardwareSerial.h>
-#include <SoftwareSerial.h>
 #include <LineSensors.h>
+#include <SerialPortSteeringController.h>
 
 #if defined(ESP32)
 #include <WiFi.h>
@@ -15,8 +13,8 @@
 #include <Path.h>
 #include <Map.h>
 #include <intersectionSteeringLogic.h>
-#include <SerialPortSteeringController.h>
 #include <dataStructures.h>
+#include <BLEDevice.h>
 
 #define BLACK_COLOR_THRESHOLD 0.30f
 
@@ -31,6 +29,8 @@ Path checkPointPath;
 CheckPointDirection checkpointDirection;
 ComandaMedicamente comandaMedicamente;
 Map mapPathCheckpoint;
+SoftwareSerial serial_soft1(4, 5); // RX TX 16, 17 NU MERG
+SoftwareSerialPortSteeringController softwareSerialPortSteeringController(serial_soft1, 255.0f, 0.0f, -255.0f);
 
 
 const float PID_Kp = 1.0f;
@@ -40,15 +40,14 @@ LineSensors lineSensors(TOTAL_LINE_SENSORS);
 float sensorsReadings[TOTAL_LINE_SENSORS];
 Point2D linePosition;
 
-SoftwareSerial serial_soft1(4, 5); // RX TX 16, 17 NU MERG
-SoftwareSerialPortSteeringController steeringController(serial_soft1, 255.0f, 0.0f, -255.0f);
+SteeringController steeringController(255.0f, 0.0f, -255.0f);
 
 float BackgroundColorOnlyCalibrationAvarages[TOTAL_LINE_SENSORS] = {
-    1312.0f, 691.0f, 1006.0f, 1378.0f, 1491.0f
+    2107.0f, 1607.0f, 1751.0f, 2064.0f, 2193.0f
   };
 
 float LineColorOlyCalibrationAvarages[TOTAL_LINE_SENSORS] = {
-    4095.0f, 4067.0f, 3923.0f, 4095.0f, 4095.0f
+    3942.0f, 3914.0f, 3811.0f, 4048.0f, 4055.0f
   };
 
 
@@ -136,7 +135,8 @@ float PID_out_right, PID_out_left;
 Point2D middleLineMax, middleLineMin;
 float blackLinePositionX, blackLinePositionY;
 int echeckpoint_direction_error;
-String toArduino;
+
+
 
 void loop()
 {
@@ -271,8 +271,5 @@ Pos_x: -1   Left: -1    Right: +1
   Serial.print("right_track:" + String(right_track_speed_cercentage));
 
   Serial.println();
-
-  toArduino = String(speed) + ";"+ String(left_track_speed_cercentage) + ";" + String(right_track_speed_cercentage);
-  serial_soft1.print(toArduino);
-  //steeringController.write(speed, left_track_speed_cercentage, right_track_speed_cercentage);
+  steeringController.write(speed, left_track_speed_cercentage, right_track_speed_cercentage);
 }

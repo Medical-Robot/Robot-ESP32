@@ -1,6 +1,5 @@
 #include <Arduino.h>
-#include <QTRSensors.h>
-
+#include <BLEDevice.h>
 #if defined(ESP32)
 #include <WiFi.h>
 #include <HTTPClient.h>
@@ -9,17 +8,12 @@
 #include <ArduinoJson-v6.21.5.h>
 #endif
 
-#define LINE_SENSOR_1_PIN 12
-#define LINE_SENSOR_2_PIN 13
-#define LINE_SENSOR_3_PIN 14
-#define LINE_SENSOR_4_PIN 32  
-#define LINE_SENSOR_5_PIN 
-//#define LINE_SENSOR_IR_PIN 15
-
-#define TOTAL_LINE_SENSORS 4
-
-
-QTRSensors qtr;
+#define TOTAL_LINE_SENSORS 5
+#define LINE_SENSOR_1_PIN 36
+#define LINE_SENSOR_2_PIN 39
+#define LINE_SENSOR_3_PIN 34
+#define LINE_SENSOR_4_PIN 35
+#define LINE_SENSOR_5_PIN 32
 
 const uint8_t SensorCount = TOTAL_LINE_SENSORS;
 uint16_t sensorValues[TOTAL_LINE_SENSORS];
@@ -35,30 +29,23 @@ void setup(){
     pinMode(LINE_SENSOR_2_PIN, INPUT);
     pinMode(LINE_SENSOR_3_PIN, INPUT);
     pinMode(LINE_SENSOR_4_PIN, INPUT);
-    //pinMode(LINE_SENSOR_5_PIN, INPUT);
-    //pinMode(LINE_SENSOR_IR_PIN, OUTPUT);
+    pinMode(LINE_SENSOR_5_PIN, INPUT);
 
-    
-
-    // configure the sensors
-    qtr.setTypeRC();
-    qtr.setSensorPins(linesensors_pins, SensorCount);
-    //qtr.setEmitterPin(LINE_SENSOR_IR_PIN);
 }
 
 
 void loop(){
-  // read raw sensor values
-  //qtr.read(sensorValues);
 
-  // print the sensor values as numbers from 0 to 2500, where 0 means maximum
-  // reflectance and 2500 means minimum reflectance
-  for (uint8_t i = 0; i < SensorCount; i++)
-  {
-    Serial.print(analogRead(linesensors_pins[i]));
+    Serial.print(analogRead(LINE_SENSOR_1_PIN));
     Serial.print('\t');
-  }
-  Serial.println();
+    Serial.print(analogRead(LINE_SENSOR_2_PIN));
+    Serial.print('\t');
+    Serial.print(analogRead(LINE_SENSOR_3_PIN));
+    Serial.print('\t');
+    Serial.print(analogRead(LINE_SENSOR_4_PIN));
+    Serial.print('\t');
+    Serial.print(analogRead(LINE_SENSOR_5_PIN));
+    Serial.print('\n');
 
   delay(250);
 }

@@ -1,18 +1,8 @@
 #include <Arduino.h>
+#include <Wire.h>
+#include <HardwareSerial.h>
+#include <SoftwareSerial.h>
 #include <LineSensors.h>
-#include <SerialPortSteeringController.h>
-#define ENABLE_ARDUINO 1
-#define MOTORS_RIGHT_IN1_PIN1 33
-#define MOTORS_RIGHT_IN2_PIN2 25
-#define MOTORS_LEFT_IN3_PIN1 26
-#define MOTORS_LEFT_IN4_PIN2 27
-                                    // forward
-#define MOTORS_RIGHT_IN1_PIN1 26    // -
-#define MOTORS_RIGHT_IN2_PIN2 27    // +
-#define MOTORS_LEFT_IN3_PIN1 33     // -
-#define MOTORS_LEFT_IN4_PIN2 25     // +
-
-#include <SteeringController.h>
 
 #if defined(ESP32)
 #include <WiFi.h>
@@ -25,11 +15,11 @@
 #include <Path.h>
 #include <Map.h>
 #include <intersectionSteeringLogic.h>
-#include <SteeringController.h>
+#include <SerialPortSteeringController.h>
 #include <dataStructures.h>
 #include <BLEDevice.h>
 
-#define BLACK_COLOR_THRESHOLD 0.30f
+#define BLACK_COLOR_THRESHOLD 0.50f
 
 #define TOTAL_LINE_SENSORS 5
 #define LINE_SENSOR_1_PIN 36
@@ -42,8 +32,6 @@ Path checkPointPath;
 CheckPointDirection checkpointDirection;
 ComandaMedicamente comandaMedicamente;
 Map mapPathCheckpoint;
-SoftwareSerial serial_soft1(4, 5); // RX TX 16, 17 NU MERG
-SoftwareSerialPortSteeringController softwareSerialPortSteeringController(serial_soft1, 255.0f, 0.0f, -255.0f);
 
 
 const float PID_Kp = 1.0f;
@@ -53,14 +41,15 @@ LineSensors lineSensors(TOTAL_LINE_SENSORS);
 float sensorsReadings[TOTAL_LINE_SENSORS];
 Point2D linePosition;
 
-SteeringController steeringController(255.0f, 0.0f, -255.0f);
+SoftwareSerial serial_soft1(4, 5); // RX TX 16, 17 NU MERG
+SoftwareSerialPortSteeringController steeringController(serial_soft1, 255.0f, 0.0f, -255.0f);
 
 float BackgroundColorOnlyCalibrationAvarages[TOTAL_LINE_SENSORS] = {
-    1312.0f, 691.0f, 1006.0f, 1378.0f, 1491.0f
+    286.0f, 194.0f, 267.0f, 368.0f, 332.0f
   };
 
 float LineColorOlyCalibrationAvarages[TOTAL_LINE_SENSORS] = {
-    4095.0f, 4067.0f, 3923.0f, 4095.0f, 4095.0f
+    3211.0f, 3013.0f, 3040.0f, 3265.0f, 3358.0f
   };
 
 
@@ -94,8 +83,8 @@ void setMap()
   checkPoint.id = 4;
   checkPoint.front_id = 6;
   checkPoint.back_id = 2;
-  checkPoint.left_id = 0;
-  checkPoint.right_id = 5;
+  checkPoint.left_id = 5;
+  checkPoint.right_id = 0;
   mapPathCheckpoint.addCheckPoint(checkPoint);
 
   checkPoint.id = 5;
@@ -115,7 +104,7 @@ void setMap()
   mapPathCheckpoint.setPreviousCheckPoint(1);
   mapPathCheckpoint.setNextCheckPoint(2);
 
-  checkPointPath = mapPathCheckpoint.findPath(3);
+  checkPointPath = mapPathCheckpoint.findPath(5);
 }
 
 
@@ -127,16 +116,6 @@ void setup()
   while (!Serial) {
     delay(100);
   }*/
-
-  pinMode(MOTORS_RIGHT_IN1_PIN1, OUTPUT);
-  pinMode(MOTORS_RIGHT_IN2_PIN2, OUTPUT);
-  pinMode(MOTORS_LEFT_IN3_PIN1, OUTPUT);
-  pinMode(MOTORS_LEFT_IN4_PIN2, OUTPUT);
-
-  analogWrite(MOTORS_RIGHT_IN1_PIN1, LOW);
-  analogWrite(MOTORS_RIGHT_IN2_PIN2, LOW);
-  analogWrite(MOTORS_LEFT_IN3_PIN1, LOW);
-  analogWrite(MOTORS_LEFT_IN4_PIN2, LOW);
 
   pinMode(LINE_SENSOR_1_PIN, INPUT);
   pinMode(LINE_SENSOR_2_PIN, INPUT);
@@ -151,15 +130,15 @@ void setup()
 }
 
 float rotateTreshold = 0.5f;
-float speed = 0.5f;
+float maxSpeed = 0.25f;
+float speed = maxSpeed;
 float right_track_speed_cercentage = 1.0f;
 float left_track_speed_cercentage = 1.0f;
 float PID_out_right, PID_out_left;
 Point2D middleLineMax, middleLineMin;
 float blackLinePositionX, blackLinePositionY;
 int echeckpoint_direction_error;
-
-
+String toArduino;
 
 void loop()
 {
@@ -207,6 +186,7 @@ if (middleLineMin.y >= BLACK_COLOR_THRESHOLD && middleLineMax.y >= BLACK_COLOR_T
       middleLineMax.x = 0.0f;
       break;
     case CheckPointDirection::BACK:
+    rotate(speed, steeringController, lineSensors, BLACK_COLOR_THRESHOLD);
       break;
     case CheckPointDirection::LEFT:
       Serial.print("\t going left");
@@ -233,7 +213,7 @@ if (middleLineMin.y >= BLACK_COLOR_THRESHOLD && middleLineMax.y >= BLACK_COLOR_T
   }
   else
   {
-    speed = 0.5f;
+    speed = maxSpeed;
   }
 
   if (echeckpoint_direction_error == 1)
@@ -284,9 +264,9 @@ Pos_x: -1   Left: -1    Right: +1
 
 
   left_track_speed_cercentage = MIN(left_track_speed_cercentage, 1.0f);
-  left_track_speed_cercentage = MAX(left_track_speed_cercentage, -0.9f);
+  left_track_speed_cercentage = MAX(left_track_speed_cercentage, -1.0f);
   right_track_speed_cercentage = MIN(right_track_speed_cercentage, 1.0f);
-  right_track_speed_cercentage = MAX(right_track_speed_cercentage, -0.90f);
+  right_track_speed_cercentage = MAX(right_track_speed_cercentage, -1.0f);
 
 
   Serial.print("left_track:" + String(left_track_speed_cercentage));
@@ -294,5 +274,10 @@ Pos_x: -1   Left: -1    Right: +1
   Serial.print("right_track:" + String(right_track_speed_cercentage));
 
   Serial.println();
+
+  //toArduino = String(speed) + ";"+ String(left_track_speed_cercentage) + ";" + String(right_track_speed_cercentage);
+  //serial_soft1.print(toArduino);
   steeringController.write(speed, left_track_speed_cercentage, right_track_speed_cercentage);
+  delay(10);
+  //steeringController.write(1.0f, 1.0f, 1.0f);
 }

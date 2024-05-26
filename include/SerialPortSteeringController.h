@@ -27,11 +27,11 @@ public:
     SoftwareSerialPortSteeringController(SoftwareSerial& serialport, float max_forward_raw_value, float stand_still_speed_raw_value, float max_backward_raw_value) : serialPort_software(serialport){
     }
     void write(float speed_percentage, float left_track_percentage, float right_track_percentage){
-        this->serialPort_software.print(speed_percentage);
+        this->serialPort_software.print(speed_percentage, 1);
         this->serialPort_software.print(';');
-        this->serialPort_software.print(left_track_percentage);
+        this->serialPort_software.print(left_track_percentage, 1);
         this->serialPort_software.print(';');
-        this->serialPort_software.print(right_track_percentage);
+        this->serialPort_software.print(right_track_percentage, 1);
         this->serialPort_software.print("\r\n");
     }
 private:
