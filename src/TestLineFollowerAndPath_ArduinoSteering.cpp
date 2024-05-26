@@ -101,8 +101,8 @@ void setMap()
   checkPoint.right_id = 0;
   mapPathCheckpoint.addCheckPoint(checkPoint);
 
-  mapPathCheckpoint.setPreviousCheckPoint(1);
-  mapPathCheckpoint.setNextCheckPoint(2);
+  mapPathCheckpoint.setPreviousCheckPoint(2);
+  mapPathCheckpoint.setNextCheckPoint(3);
 
   checkPointPath = mapPathCheckpoint.findPath(5);
 }
@@ -186,6 +186,7 @@ if (middleLineMin.y >= BLACK_COLOR_THRESHOLD && middleLineMax.y >= BLACK_COLOR_T
       middleLineMax.x = 0.0f;
       break;
     case CheckPointDirection::BACK:
+    Serial.print("\t Rotate");
     rotate(speed, steeringController, lineSensors, BLACK_COLOR_THRESHOLD);
       break;
     case CheckPointDirection::LEFT:

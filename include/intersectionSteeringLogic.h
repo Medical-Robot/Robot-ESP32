@@ -88,6 +88,6 @@ template <class T> static void takeLeft(float speed, T& steeringController, Line
 }
 
 template <class T> static void rotate(float speed, T& steeringController, LineSensors& lineSensor, float blackThreshold){
-    steeringController.write(speed, -1.0f, -1.0f);
-        delay(6000);
+    steeringController.write(speed, -1.0f, 1.0f);
+    delay(6000);
 }
