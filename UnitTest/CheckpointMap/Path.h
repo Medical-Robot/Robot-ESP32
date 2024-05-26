@@ -95,31 +95,29 @@ public:
 		if (temp_ptr == NULL) {
 			return CheckPointDirection::NONE;
 		}
-		nextCheckpoint_temp = this->previousCheckPoint;
+		PathCheckpoint prevCheckpoint_ = this->previousCheckPoint;
+		PathCheckpoint nextcheckpoint_ = this->nextCheckPoint;
+		checkpoint = nextcheckpoint_;
 
-		if (nextCheckpoint_temp.back_id == checkpoint.id) {
-			temp = checkpoint.left_id;
-			checkpoint.left_id = checkpoint.right_id;
-			checkpoint.right_id = temp;
-
-			temp = checkpoint.front_id;
-			checkpoint.front_id = checkpoint.back_id;
-			checkpoint.back_id = temp;
+		if (nextcheckpoint_.back_id == prevCheckpoint_.id) {
 		}
-		else if (nextCheckpoint_temp.front_id == checkpoint.id) {
-
+		else if (nextcheckpoint_.right_id == prevCheckpoint_.id) {
+			checkpoint.front_id = nextcheckpoint_.left_id;
+			checkpoint.back_id = nextcheckpoint_.right_id;
+			checkpoint.right_id = nextcheckpoint_.front_id;
+			checkpoint.left_id = nextcheckpoint_.back_id;
 		}
-		else if (nextCheckpoint_temp.left_id == checkpoint.id) {
-			temp = checkpoint.front_id;
-			checkpoint.front_id = checkpoint.back_id;
-			checkpoint.back_id = temp;
-
-			temp = checkpoint.left_id;
-			checkpoint.left_id = checkpoint.right_id;
-			checkpoint.right_id = temp;
+		else if (nextcheckpoint_.left_id == prevCheckpoint_.id) {
+			checkpoint.front_id = nextcheckpoint_.right_id;
+			checkpoint.back_id = nextcheckpoint_.left_id;
+			checkpoint.right_id = nextcheckpoint_.back_id;
+			checkpoint.left_id = nextcheckpoint_.front_id;
 		}
-		else if (nextCheckpoint_temp.right_id == checkpoint.id) {
-
+		else if (nextcheckpoint_.front_id == prevCheckpoint_.id) {
+			checkpoint.front_id = nextcheckpoint_.back_id;
+			checkpoint.back_id = nextcheckpoint_.front_id;
+			checkpoint.right_id = nextcheckpoint_.left_id;
+			checkpoint.left_id = nextcheckpoint_.right_id;
 		}
 
 		if (checkpoint.next_checkpoint_id == checkpoint.front_id) {

@@ -130,7 +130,7 @@ void setup()
 }
 
 float rotateTreshold = 0.5f;
-float maxSpeed = 0.25f;
+float maxSpeed = 0.35f;
 float speed = maxSpeed;
 float right_track_speed_cercentage = 1.0f;
 float left_track_speed_cercentage = 1.0f;
@@ -200,8 +200,9 @@ if (middleLineMin.y >= BLACK_COLOR_THRESHOLD && middleLineMax.y >= BLACK_COLOR_T
 
       break;
     case CheckPointDirection::NONE:
+    retreatBeforeCheckpoint(speed, steeringController, lineSensors, BLACK_COLOR_THRESHOLD);
       // error or reached destination
-      echeckpoint_direction_error = 1;
+      //echeckpoint_direction_error = 1;
       break;
     default:
       middleLineMax.x = 0.0f;
@@ -279,6 +280,6 @@ Pos_x: -1   Left: -1    Right: +1
   //toArduino = String(speed) + ";"+ String(left_track_speed_cercentage) + ";" + String(right_track_speed_cercentage);
   //serial_soft1.print(toArduino);
   steeringController.write(speed, left_track_speed_cercentage, right_track_speed_cercentage);
-  delay(10);
+  delay(5);
   //steeringController.write(1.0f, 1.0f, 1.0f);
 }
