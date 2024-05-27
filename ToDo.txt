@@ -12,3 +12,9 @@ de noteaza id-ul undeva si mai apoi se adauga in baza de date, pe scurt hardcoda
 montat senzorul undeva in fata masini ca sa vada si cardul de la pat (sa stea pe verticala). 
 
 3 - Pe baza exemplelor de send si get se pot implementa alte functionalitati specifice, diferenta: url-ul din functie.
+
+4 - Set command to complete or not
+
+5 - finish preiaRobot (detalii cu comanda)
+
+6 - modify preiaComandaNoua with getDocumentIDs

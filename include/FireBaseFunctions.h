@@ -29,6 +29,7 @@ ComandaMedicamente comandaMedicamente;
 WiFiClientSecure client;
 HTTPClient https;
 std::vector<String> documentIds;
+std::vector<Robot> robots;
 
 //============================================================================================//
 
@@ -606,6 +607,59 @@ std::vector<String> getDocumentIDs()
 
     https.end();
     return documentIds;
+}
+
+//============================================================================================//
+
+std::vector<Robot> preiaRobot()
+{
+    std::vector<String> documentIDs;
+    documentIDs = getDocumentIDs();
+    String jsonStr;
+    Robot robot;
+    DeserializationError error;
+    StaticJsonDocument<1024> jsonDoc;
+    JsonObject root, fields;
+
+    for (const String &documentId : documentIds)
+    {
+        jsonStr = getFirestoreData(documentId);
+        error = deserializeJson(jsonDoc, jsonStr);
+        if (error)
+        {
+            Serial.print("deserializeJson() failed: ");
+            Serial.println(error.c_str());
+            continue;
+        }
+
+        root = jsonDoc.as<JsonObject>();
+        fields = root["fields"];
+
+        robot.destinationCheckpointID = fields["destinationCheckpointID"]["integerValue"].as<int>();
+        robot.nextCheckpointID = fields["nextCheckpointID"]["integerValue"].as<int>();
+        robot.prevCheckpointID = fields["prevCheckpointID"]["integerValue"].as<int>();
+        robot.status = fields["status"]["stringValue"].as<String>();
+
+        Serial.print("Robot id:");
+        Serial.println(documentId);
+
+        Serial.print("nextCheckpointID:");
+        Serial.println(robot.nextCheckpointID);
+
+        Serial.print("prevCheckpointID:");
+        Serial.println(robot.prevCheckpointID);
+
+        Serial.print("destinationCheckpointID:");
+        Serial.println(robot.destinationCheckpointID);
+
+        Serial.print("status:");
+        Serial.println(robot.status);
+
+        robots.push_back(robot);
+    }
+
+    return robots; // returning the map from the Date Base
+    Serial.println("Succesfull reading from DB.");
 }
 
 //============================================================================================//

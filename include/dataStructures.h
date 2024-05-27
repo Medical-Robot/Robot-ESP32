@@ -9,6 +9,13 @@ typedef enum ComandaMedicamenteStatus{
     STATUS_COMPLETED
 }ComandaMedicamenteStatus;
 
+typedef struct Robot{
+    int destinationCheckpointID;
+    int nextCheckpointID;
+    int prevCheckpointID;
+    String status;
+}Robot;
+
 typedef enum ComandaMedicamenteProgress{
     STATE_NONE,
     STATE_GOING_TO_PHARMACY,
