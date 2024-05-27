@@ -9,14 +9,14 @@
 
 #define WIFI_SSID "qwert"
 #define WIFI_PASSWORD "31415926"
-//#define WIFI_SSID "Off Limits2"
-//#define WIFI_PASSWORD "J7s2tzvzKzva"
+// #define WIFI_SSID "Off Limits2"
+// #define WIFI_PASSWORD "J7s2tzvzKzva"
 #define FIREBASE_HOST "https://firestore.googleapis.com"
 #define FIREBASE_PROJECT_ID "pharmalinker2"
-//#define FIREBASE_COLLECTION_PATH "map"
-#define FIREBASE_COLLECTION_PATH "comenzi"
+// #define FIREBASE_COLLECTION_PATH "map"
+// #define FIREBASE_COLLECTION_PATH "comenzi"
 #define FIREBASE_API_KEY "AIzaSyDhs5wDN_j-u1jwX426LxOtRF2tJPmeJeg"
-//#define FIREBASE_API_KEY "AIzaSyBtzlSH-aTnBYVfFXhPXAWFhXn1A8Cd6U4"
+// #define FIREBASE_API_KEY "AIzaSyBtzlSH-aTnBYVfFXhPXAWFhXn1A8Cd6U4"
 #define FIREBASE_DATABASE_URL "https://pharmalinker2-default-rtdb.europe-west1.firebasedatabase.app/"
 
 FirebaseData fbdo;
@@ -35,7 +35,7 @@ String getFirestoreData(const String &documentPath)
 {
     client.setInsecure(); // Use with caution, should verify certificates in production
 
-    String url = String(FIREBASE_HOST) + "/v1/projects/" + FIREBASE_PROJECT_ID + "/databases/(default)/documents/" + FIREBASE_COLLECTION_PATH + "/" + documentPath + "?key=" + FIREBASE_API_KEY;
+    String url = String(FIREBASE_HOST) + "/v1/projects/" + FIREBASE_PROJECT_ID + "/databases/(default)/documents/map" + "/" + documentPath + "?key=" + FIREBASE_API_KEY;
 
     https.begin(client, url);
     int httpCode = https.GET();
@@ -56,19 +56,23 @@ String getFirestoreData(const String &documentPath)
 
 //============================================================================================//
 
-String sendFirestoreData(const String &documentPath, const String &data){
+String sendStatusToFirestore(const String &documentPath, const String &data)
+{
     client.setInsecure();
 
-    String url = String(FIREBASE_HOST) + "/v1/projects/" + FIREBASE_PROJECT_ID + "/databases/(default)/documents/" + FIREBASE_COLLECTION_PATH + "/" + documentPath + "?key=" + FIREBASE_API_KEY;
+    String url = String(FIREBASE_HOST) + "/v1/projects/" + FIREBASE_PROJECT_ID + "/databases/(default)/documents/comenzi" + "/" + documentPath + "?key=" + FIREBASE_API_KEY;
 
     https.begin(client, url);
     https.addHeader("Content-Type", "application/json");
 
     int httpCode = https.PUT(data); // Sending data as a string
 
-    if (httpCode > 0) {
+    if (httpCode > 0)
+    {
         Serial.printf("Data sent successfully, HTTP response code: %d\n", httpCode);
-    } else {
+    }
+    else
+    {
         Serial.printf("PUT request failed, error: %s\n", https.errorToString(httpCode).c_str());
     }
 
@@ -87,7 +91,7 @@ std::vector<Checkpoint> preiaComandaNoua()
     StaticJsonDocument<1024> jsonDoc;
     JsonObject root, fields;
 
-    for (i = 1; i <= 8; i++)
+    for (i = 1; i <= 6; i++)
     {
         switch (i)
         {
@@ -140,6 +144,29 @@ std::vector<Checkpoint> preiaComandaNoua()
         case 3:
             checkpoint.id = 3;
             documentPath = "3";
+            jsonStr = getFirestoreData(documentPath);
+            error = deserializeJson(jsonDoc, jsonStr);
+            if (error)
+            {
+                Serial.print("deserializeJson() failed: ");
+                Serial.println(error.c_str());
+                break;
+            }
+
+            root = jsonDoc.as<JsonObject>();
+            fields = root["fields"];
+
+            checkpoint.back_id = fields["back_id"]["integerValue"].as<int>();
+            checkpoint.front_id = fields["front_id"]["integerValue"].as<int>();
+            checkpoint.left_id = fields["left_id"]["integerValue"].as<int>();
+            checkpoint.right_id = fields["right_id"]["integerValue"].as<int>();
+
+            mapPathCheckpoint.addCheckPoint(checkpoint);
+            break;
+
+        case 4:
+            checkpoint.id = 4;
+            documentPath = "4";
             jsonStr = getFirestoreData(documentPath);
             error = deserializeJson(jsonDoc, jsonStr);
             if (error)
@@ -329,7 +356,7 @@ void sendStateToCLoud(ComandaMedicamenteStatus status)
     {
         startTime = millis();
         serializeJson(comenziDoc, jsonStr);
-        sendFirestoreData(documentPath, jsonStr);
+        sendStatusToFirestore(documentPath, jsonStr);
         Serial.printf("Data sent with succes to DB.");
     }
 }

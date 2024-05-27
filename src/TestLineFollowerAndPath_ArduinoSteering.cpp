@@ -3,7 +3,7 @@
 #include <HardwareSerial.h>
 #include <SoftwareSerial.h>
 #include <LineSensors.h>
-
+#include <FireBaseFunctions.h>
 #if defined(ESP32)
 #include <WiFi.h>
 #include <HTTPClient.h>
@@ -30,10 +30,10 @@
 
 Path checkPointPath;
 CheckPointDirection checkpointDirection;
-ComandaMedicamente comandaMedicamente;
-Map mapPathCheckpoint;
+// ComandaMedicamente comandaMedicamente;
+// Map mapPathCheckpoint;
 int onDestination = 0;
-
+std::vector<Checkpoint> checkPoints;
 
 const float PID_Kp = 1.0f;
 
@@ -46,17 +46,20 @@ SoftwareSerial serial_soft1(4, 5); // RX TX 16, 17 NU MERG
 SoftwareSerialPortSteeringController steeringController(serial_soft1, 255.0f, 0.0f, -255.0f);
 
 float BackgroundColorOnlyCalibrationAvarages[TOTAL_LINE_SENSORS] = {
-    286.0f, 194.0f, 267.0f, 368.0f, 332.0f
-  };
+    286.0f, 194.0f, 267.0f, 368.0f, 332.0f};
 
 float LineColorOlyCalibrationAvarages[TOTAL_LINE_SENSORS] = {
-    3211.0f, 3013.0f, 3040.0f, 3265.0f, 3358.0f
-  };
+    3211.0f, 3013.0f, 3040.0f, 3265.0f, 3358.0f};
 
-void setMapFromCloud(){
-  
+void setMapFromCloud(int previousCheckPoint, int nextCheckPoint, int destination)
+{
+  checkPoints = preiaComandaNoua();
+
+  mapPathCheckpoint.setPreviousCheckPoint(previousCheckPoint);
+  mapPathCheckpoint.setNextCheckPoint(nextCheckPoint);
+
+  checkPointPath = mapPathCheckpoint.findPath(destination);
 }
-
 
 void setMap()
 {
@@ -110,7 +113,6 @@ void setMap()
   checkPointPath = mapPathCheckpoint.findPath(1);
 }
 
-
 void setup()
 {
   Serial.begin(9600);
@@ -119,7 +121,7 @@ void setup()
   while (!Serial) {
     delay(100);
   }*/
-
+  connectingTo();
   pinMode(LINE_SENSOR_1_PIN, INPUT);
   pinMode(LINE_SENSOR_2_PIN, INPUT);
   pinMode(LINE_SENSOR_3_PIN, INPUT);
@@ -129,7 +131,8 @@ void setup()
   lineSensors.setPins(linesensors_pins, TOTAL_LINE_SENSORS);
   lineSensors.SetBackgroundColorOnlyCalibrationAvarages(BackgroundColorOnlyCalibrationAvarages);
   lineSensors.SetLineColorOlyCalibrationAvarages(LineColorOlyCalibrationAvarages);
-  //setMap();
+  setMapFromCloud(4, 5, 1);
+  //  setMap();
 }
 
 float rotateTreshold = 0.5f;
@@ -150,13 +153,12 @@ void loop()
     lineSensors.read();
     delay(10);
   }
-  
+
   lineSensors.read();
   middleLineMax = lineSensors.getMaxValue();
   middleLineMin = lineSensors.getMinValue();
 
-
-if (middleLineMin.y >= BLACK_COLOR_THRESHOLD && middleLineMax.y >= BLACK_COLOR_THRESHOLD)
+  if (middleLineMin.y >= BLACK_COLOR_THRESHOLD && middleLineMax.y >= BLACK_COLOR_THRESHOLD)
   {
 
     if (checkPointPath.reachedDestination() && onDestination == 0)
@@ -176,7 +178,7 @@ if (middleLineMin.y >= BLACK_COLOR_THRESHOLD && middleLineMax.y >= BLACK_COLOR_T
         steeringController.write(0.0f, 0.0f, 0.0f);
         // arrived at the pacient
         /*do someting when arrived at the pacient*/
-        //TO DO: ADD AND COMPARE THE UID WHICH EVERY CARD HAS
+        // TO DO: ADD AND COMPARE THE UID WHICH EVERY CARD HAS
       }
     }
 
@@ -191,8 +193,8 @@ if (middleLineMin.y >= BLACK_COLOR_THRESHOLD && middleLineMax.y >= BLACK_COLOR_T
       middleLineMax.x = 0.0f;
       break;
     case CheckPointDirection::BACK:
-    Serial.print("\t Rotate");
-    rotate(speed, steeringController, lineSensors, BLACK_COLOR_THRESHOLD);
+      Serial.print("\t Rotate");
+      rotate(speed, steeringController, lineSensors, BLACK_COLOR_THRESHOLD);
       break;
     case CheckPointDirection::LEFT:
       Serial.print("\t going left");
@@ -206,13 +208,12 @@ if (middleLineMin.y >= BLACK_COLOR_THRESHOLD && middleLineMax.y >= BLACK_COLOR_T
       break;
     case CheckPointDirection::NONE:
       // error or reached destination
-      //echeckpoint_direction_error = 1;
+      // echeckpoint_direction_error = 1;
       break;
     default:
       middleLineMax.x = 0.0f;
       break;
     }
-    
 
     checkpointDirection = checkPointPath.getNextDirection();
     checkPointPath.goNextCheckPoint();
@@ -238,42 +239,45 @@ if (middleLineMin.y >= BLACK_COLOR_THRESHOLD && middleLineMax.y >= BLACK_COLOR_T
   Serial.print("Min Posy:" + String(middleLineMin.y));
   Serial.print('\t');
 
-/*
-Pos_x: -1   Left: -1    Right: +1
-*/
+  /*
+  Pos_x: -1   Left: -1    Right: +1
+  */
 
-
-  if (blackLinePositionX < 0.0f) {
+  if (blackLinePositionX < 0.0f)
+  {
     PID_out_right = 1.0f;
-    if (blackLinePositionX <= (-rotateTreshold)) {
+    if (blackLinePositionX <= (-rotateTreshold))
+    {
       PID_out_left = (blackLinePositionX + rotateTreshold) * 2.0f;
     }
-    else{
+    else
+    {
       PID_out_left = ((rotateTreshold) + blackLinePositionX) * 2.0f;
     }
   }
-  else{
+  else
+  {
     PID_out_left = 1.0f;
-    if (blackLinePositionX <= (rotateTreshold)) {
+    if (blackLinePositionX <= (rotateTreshold))
+    {
       PID_out_right = (rotateTreshold - blackLinePositionX) * 2.0f;
     }
-    else{
+    else
+    {
       PID_out_right = ((-blackLinePositionX) + rotateTreshold) * 2.0f;
     }
   }
-  
+
   PID_out_right = PID_out_right * PID_Kp;
   PID_out_left = PID_out_left * PID_Kp;
 
   right_track_speed_cercentage = PID_out_right;
   left_track_speed_cercentage = PID_out_left;
 
-
   left_track_speed_cercentage = MIN(left_track_speed_cercentage, 1.0f);
   left_track_speed_cercentage = MAX(left_track_speed_cercentage, -1.0f);
   right_track_speed_cercentage = MIN(right_track_speed_cercentage, 1.0f);
   right_track_speed_cercentage = MAX(right_track_speed_cercentage, -1.0f);
-
 
   Serial.print("left_track:" + String(left_track_speed_cercentage));
   Serial.print('\t');
@@ -281,15 +285,17 @@ Pos_x: -1   Left: -1    Right: +1
 
   Serial.println();
 
-  //toArduino = String(speed) + ";"+ String(left_track_speed_cercentage) + ";" + String(right_track_speed_cercentage);
-  //serial_soft1.print(toArduino);
-  if (onDestination == 0) {
-      steeringController.write(speed, left_track_speed_cercentage, right_track_speed_cercentage);
+  // toArduino = String(speed) + ";"+ String(left_track_speed_cercentage) + ";" + String(right_track_speed_cercentage);
+  // serial_soft1.print(toArduino);
+  if (onDestination == 0)
+  {
+    steeringController.write(speed, left_track_speed_cercentage, right_track_speed_cercentage);
   }
-  else {
-      steeringController.write(0.0f, 0.0f, 0.0f);
+  else
+  {
+    steeringController.write(0.0f, 0.0f, 0.0f);
   }
-  
+
   delay(5);
-  //steeringController.write(1.0f, 1.0f, 1.0f);
+  steeringController.write(1.0f, 1.0f, 1.0f);
 }

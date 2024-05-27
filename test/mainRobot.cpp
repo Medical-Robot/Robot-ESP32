@@ -53,17 +53,17 @@ void setMap()
   mapPathCheckpoint.addCheckPoint(checkPoint);
 
   checkPoint.id = 2;
-  checkPoint.front_id = 3;
+  checkPoint.front_id = 4;
   checkPoint.back_id = 1;
-  checkPoint.left_id = 7;
-  checkPoint.right_id = 0;
+  checkPoint.left_id = 0;
+  checkPoint.right_id = 3;
   mapPathCheckpoint.addCheckPoint(checkPoint);
 
   checkPoint.id = 3;
-  checkPoint.front_id = 8;
+  checkPoint.front_id = 0;
   checkPoint.back_id = 2;
   checkPoint.left_id = 0;
-  checkPoint.right_id = 5;
+  checkPoint.right_id = 0;
   mapPathCheckpoint.addCheckPoint(checkPoint);
 
   checkPoint.id = 5;
