@@ -7,16 +7,17 @@
 #include <Map.h>
 #include <dataStructures.h>
 
-// #define WIFI_SSID "qwert"
-// #define WIFI_PASSWORD "31415926"
-#define WIFI_SSID "Off Limits2"
-#define WIFI_PASSWORD "J7s2tzvzKzva"
+#define WIFI_SSID "qwert"
+#define WIFI_PASSWORD "31415926"
+//#define WIFI_SSID "Off Limits2"
+//#define WIFI_PASSWORD "J7s2tzvzKzva"
 #define FIREBASE_HOST "https://firestore.googleapis.com"
-#define FIREBASE_PROJECT_ID "pharmalinker1"
-#define FIREBASE_COLLECTION_PATH "map"
-// #define FIREBASE_API_KEY "AIzaSyBtzlSH-aTnBYVfFXhPXAWFhXn1A8Cd6U4"
-#define FIREBASE_API_KEY "AIzaSyBtzlSH-aTnBYVfFXhPXAWFhXn1A8Cd6U4"
-#define FIREBASE_DATABASE_URL "https://pharmalinker1-default-rtdb.europe-west1.firebasedatabase.app/"
+#define FIREBASE_PROJECT_ID "pharmalinker2"
+//#define FIREBASE_COLLECTION_PATH "map"
+#define FIREBASE_COLLECTION_PATH "comenzi"
+#define FIREBASE_API_KEY "AIzaSyDhs5wDN_j-u1jwX426LxOtRF2tJPmeJeg"
+//#define FIREBASE_API_KEY "AIzaSyBtzlSH-aTnBYVfFXhPXAWFhXn1A8Cd6U4"
+#define FIREBASE_DATABASE_URL "https://pharmalinker2-default-rtdb.europe-west1.firebasedatabase.app/"
 
 FirebaseData fbdo;
 FirebaseAuth auth;
@@ -302,7 +303,7 @@ void sendStateToCLoud(ComandaMedicamenteStatus status)
     // Convertirea codului de eroare într-un string
     String statusParsed;
     static uint32_t startTime = millis();
-    String documentPath = "comenzi/stare_masina";
+    String documentPath = "1";
     String jsonStr;
     StaticJsonDocument<1024> comenziDoc;
 

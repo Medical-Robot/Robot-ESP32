@@ -104,7 +104,7 @@ void setup()
   delay(4);
 
   connectingTo();
-  
+
   pinMode(LINE_SENSOR_1_PIN, INPUT);
   pinMode(LINE_SENSOR_2_PIN, INPUT);
   pinMode(LINE_SENSOR_3_PIN, INPUT);
@@ -115,7 +115,7 @@ void setup()
   lineSensors.SetBackgroundColorOnlyCalibrationAvarages(BackgroundColorOnlyCalibrationAvarages);
   lineSensors.SetLineColorOlyCalibrationAvarages(LineColorOlyCalibrationAvarages);
 
-  //setMap();
+  // setMap();
 }
 
 //============================================================================================//
@@ -176,7 +176,7 @@ void loop()
       {
         steeringController.write(0.0f, 0.0f, 0.0f);
         // arrived at the pacient
-        ComandaMedicamenteStatus status = ComandaMedicamenteStatus::STATUS_COMPLETED;
+        sendStateToCLoud(ComandaMedicamenteStatus::STATUS_COMPLETED);
         /*do someting when arrived at the pacient*/
         // TO DO: ADD AND COMPARE THE UID WHICH EVERY CARD HAS
       }
