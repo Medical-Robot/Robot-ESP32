@@ -15,7 +15,7 @@ class Path
 {
 public:
 	Path() {
-
+		this->destinationReached = false;
 	}
 	~Path() {
 
@@ -50,11 +50,8 @@ public:
 
 		if (this->nextCheckPoint.id == this->destinationCheckpointId)
 		{
-			this->destinationCheckpointId = true;
+			this->destinationReached = true;
 			return;
-		}
-		else{
-			this->destinationCheckpointId = true;
 		}
 		
 

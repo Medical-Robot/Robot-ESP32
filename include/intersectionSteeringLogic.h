@@ -2,8 +2,11 @@
 #include <SteeringController.h>
 #include <LineSensors.h>
 
+#define HALF_ROTATION_MS 2000
+
 template <class T> static void takeRight(float speed, T& steeringController, LineSensors& lineSensor, float blackThreshold){
     uint32_t startTime;
+    speed = 0.4f;
     //speed = 0.8f;
     int loopDelayMs = 5;
     /*
@@ -61,7 +64,7 @@ template <class T> static void takeRight(float speed, T& steeringController, Lin
     }
     */
     steeringController.write(speed, 1.0f, -1.0f);
-        delay(1250);
+        delay(HALF_ROTATION_MS / 2);
 /*
     lineSensor.read();
     while (lineSensor.getMinValue().y >= blackThreshold) {
@@ -83,16 +86,26 @@ template <class T> static void takeRight(float speed, T& steeringController, Lin
 
 
 template <class T> static void takeLeft(float speed, T& steeringController, LineSensors& lineSensor, float blackThreshold){
+    speed = 0.4f;
     steeringController.write(speed, -1.0f, 1.0f);
-        delay(1250);
+        delay(HALF_ROTATION_MS / 2);
 }
 
 template <class T> static void rotate(float speed, T& steeringController, LineSensors& lineSensor, float blackThreshold){
+    speed = 0.4f;
+    int loopDelayMs = 5;
     steeringController.write(speed, -1.0f, 1.0f);
-    delay(2500);
+    delay(HALF_ROTATION_MS);
+    lineSensor.read();
+    while (!(lineSensor.getMaxValue().y >= blackThreshold && lineSensor.getMaxValue().x < 0.5f)) {
+        steeringController.write(speed, -1.0f, 1.0f);
+        lineSensor.read();
+        delay(loopDelayMs);
+    }
 }
 
 template <class T> static void retreatBeforeCheckpoint(float speed, T& steeringController, LineSensors& lineSensor, float blackThreshold){
+    speed = 0.4f;
     int loopDelayMs = 5;
     lineSensor.read();
     while (lineSensor.getMinValue().y >= blackThreshold) {

@@ -32,6 +32,7 @@ Path checkPointPath;
 CheckPointDirection checkpointDirection;
 ComandaMedicamente comandaMedicamente;
 Map mapPathCheckpoint;
+int onDestination = 0;
 
 
 const float PID_Kp = 1.0f;
@@ -101,10 +102,10 @@ void setMap()
   checkPoint.right_id = 0;
   mapPathCheckpoint.addCheckPoint(checkPoint);
 
-  mapPathCheckpoint.setPreviousCheckPoint(2);
-  mapPathCheckpoint.setNextCheckPoint(3);
+  mapPathCheckpoint.setPreviousCheckPoint(4);
+  mapPathCheckpoint.setNextCheckPoint(5);
 
-  checkPointPath = mapPathCheckpoint.findPath(5);
+  checkPointPath = mapPathCheckpoint.findPath(1);
 }
 
 
@@ -156,10 +157,12 @@ void loop()
 if (middleLineMin.y >= BLACK_COLOR_THRESHOLD && middleLineMax.y >= BLACK_COLOR_THRESHOLD)
   {
 
-    if (checkPointPath.reachedDestination())
+    if (checkPointPath.reachedDestination() && onDestination == 0)
     {
+      onDestination = 1;
       Serial.print('\t');
       Serial.print("Destination reached");
+      retreatBeforeCheckpoint(speed, steeringController, lineSensors, BLACK_COLOR_THRESHOLD);
       // echeckpoint_direction_error = 1;
       if (comandaMedicamente.parmacieCheckpointId == checkPointPath.getDestinationCheckpointId())
       {
@@ -200,7 +203,6 @@ if (middleLineMin.y >= BLACK_COLOR_THRESHOLD && middleLineMax.y >= BLACK_COLOR_T
 
       break;
     case CheckPointDirection::NONE:
-    retreatBeforeCheckpoint(speed, steeringController, lineSensors, BLACK_COLOR_THRESHOLD);
       // error or reached destination
       //echeckpoint_direction_error = 1;
       break;
@@ -279,7 +281,13 @@ Pos_x: -1   Left: -1    Right: +1
 
   //toArduino = String(speed) + ";"+ String(left_track_speed_cercentage) + ";" + String(right_track_speed_cercentage);
   //serial_soft1.print(toArduino);
-  steeringController.write(speed, left_track_speed_cercentage, right_track_speed_cercentage);
+  if (onDestination == 0) {
+      steeringController.write(speed, left_track_speed_cercentage, right_track_speed_cercentage);
+  }
+  else {
+      steeringController.write(0.0f, 0.0f, 0.0f);
+  }
+  
   delay(5);
   //steeringController.write(1.0f, 1.0f, 1.0f);
 }
