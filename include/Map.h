@@ -230,8 +230,46 @@ public:
 	}
 
 	void addCheckPoint(Checkpoint newCheckpoint) {
+		if((newCheckpoint.front_id + newCheckpoint.back_id + newCheckpoint.left_id + newCheckpoint.right_id) <= 0){
+			return;
+		}
 		checkPoints.push_back(newCheckpoint);
 	}
+	void addCheckPoint(std::vector<Checkpoint>& newCheckpoints) {
+		for (int i = 0; i < newCheckpoints.size(); i++) {
+			if((newCheckpoints[i].front_id + newCheckpoints[i].back_id + newCheckpoints[i].left_id + newCheckpoints[i].right_id) <= 0){
+				continue;
+			}
+			checkPoints.push_back(newCheckpoints[i]);
+		}
+	}
+
+	void printCheckpoints() {
+		Serial.println("\tMap Checkpoints");
+		for (size_t i = 0; i < this->checkPoints.size(); i++)
+		{
+			Serial.print("\t\tindex: ");
+			Serial.println(i);
+			Serial.print("\t\tid: ");
+			Serial.println(this->checkPoints[i].id);
+
+			Serial.print("\t\tfront_id: ");
+			Serial.println(this->checkPoints[i].front_id);
+
+			Serial.print("\t\tback_id: ");
+			Serial.println(this->checkPoints[i].back_id);
+
+			Serial.print("\t\tleft_id: ");
+			Serial.println(this->checkPoints[i].left_id);
+
+			Serial.print("\t\tright_id: ");
+			Serial.println(this->checkPoints[i].right_id);
+			Serial.println();
+			Serial.println();
+		}
+
+	}
+
 
 	Checkpoint* findCheckPointById(int checkPointId) {
 		for (size_t i = 0; i < checkPoints.size(); i++)

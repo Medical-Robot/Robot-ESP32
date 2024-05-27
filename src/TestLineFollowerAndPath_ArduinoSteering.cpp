@@ -38,6 +38,7 @@ CheckPointDirection checkpointDirection;
 // Map mapPathCheckpoint;
 int onDestination = 0;
 std::vector<Checkpoint> checkPoints;
+std::vector<PathCheckpoint> pathCheckPoints;
 
 const float PID_Kp = 1.0f;
 
@@ -55,10 +56,34 @@ float BackgroundColorOnlyCalibrationAvarages[TOTAL_LINE_SENSORS] = {
 float LineColorOlyCalibrationAvarages[TOTAL_LINE_SENSORS] = {
     3211.0f, 3013.0f, 3040.0f, 3265.0f, 3358.0f};
 
-void setMapFromCloud(int previousCheckPoint, int nextCheckPoint, int destination)
+void printCheckpoints(std::vector<Checkpoint> checkPoints)
 {
-  checkPoints = preiaComandaNoua();
 
+  for (int i = 0; i < checkPoints.size(); i++)
+  {
+
+    Serial.print("Checkpoint ids:");
+    Serial.println(checkPoints[i].id);
+    Serial.print("back_id: ");
+    Serial.println(checkPoints[i].back_id);
+
+    Serial.print("front_id: ");
+    Serial.println(checkPoints[i].front_id);
+
+    Serial.print("left_id: ");
+    Serial.println(checkPoints[i].left_id);
+
+    Serial.print("right_id: ");
+    Serial.println(checkPoints[i].right_id);
+  }
+}
+
+void setMapFromCloud(int previousCheckPoint, int nextCheckPoint, int destination) {
+  checkPoints = preiaComandaNoua();
+  mapPathCheckpoint.getCheckPoints().clear();
+  printCheckpoints(checkPoints);
+  mapPathCheckpoint.addCheckPoint(checkPoints);
+  mapPathCheckpoint.printCheckpoints();
   mapPathCheckpoint.setPreviousCheckPoint(previousCheckPoint);
   mapPathCheckpoint.setNextCheckPoint(nextCheckPoint);
 
@@ -111,42 +136,42 @@ void setMap()
   checkPoint.right_id = 0;
   mapPathCheckpoint.addCheckPoint(checkPoint);
 
-  mapPathCheckpoint.setPreviousCheckPoint(4);
-  mapPathCheckpoint.setNextCheckPoint(5);
+  mapPathCheckpoint.setPreviousCheckPoint(1);
+  mapPathCheckpoint.setNextCheckPoint(2);
 
-  checkPointPath = mapPathCheckpoint.findPath(1);
+  checkPointPath = mapPathCheckpoint.findPath(5);
 }
 
-static float getFrontObstacleDistance_cm()
-{
-  // calculations were made in centimeters
-  static uint32_t pulseInTimeout_us = (uint32_t)((200.0f / 34300.0f) * 1000000.0f);
+// static float getFrontObstacleDistance_cm()
+// {
+//   // calculations were made in centimeters
+//   static uint32_t pulseInTimeout_us = (uint32_t)((200.0f / 34300.0f) * 1000000.0f);
 
-  float duration;
-  float measured_distance = 0.0f;
-  float estimated_distance = 0.0f;
-  float estimated_distance_sensor1 = 400.0f, estimated_distance_sensor2 = 400.0f, estimated_distance_sensor3 = 400.0f;
+//   float duration;
+//   float measured_distance = 0.0f;
+//   float estimated_distance = 0.0f;
+//   float estimated_distance_sensor1 = 400.0f, estimated_distance_sensor2 = 400.0f, estimated_distance_sensor3 = 400.0f;
 
-  digitalWrite(DISTANCE_SENSOR_TRIG_PIN, LOW);
-  delayMicroseconds(2);
-  // Sets the trigPin on HIGH state for 10 micro seconds
-  digitalWrite(DISTANCE_SENSOR_TRIG_PIN, HIGH);
-  delayMicroseconds(10); // This pin should be set to HIGH for 10 μs, at which point the HC­SR04 will send out an eight cycle sonic burst at 40 kHZ
-  digitalWrite(DISTANCE_SENSOR_TRIG_PIN, LOW);
-  // Reads the echoPin, returns the sound wave travel time in microseconds
-  duration = (float)(pulseIn(DISTANCE_SENSOR_ECHO_PIN, HIGH, pulseInTimeout_us));
-  // Calculating the distance
-  measured_distance = duration * 0.034321f / 2.0f;
+//   digitalWrite(DISTANCE_SENSOR_TRIG_PIN, LOW);
+//   delayMicroseconds(2);
+//   // Sets the trigPin on HIGH state for 10 micro seconds
+//   digitalWrite(DISTANCE_SENSOR_TRIG_PIN, HIGH);
+//   delayMicroseconds(10); // This pin should be set to HIGH for 10 μs, at which point the HC­SR04 will send out an eight cycle sonic burst at 40 kHZ
+//   digitalWrite(DISTANCE_SENSOR_TRIG_PIN, LOW);
+//   // Reads the echoPin, returns the sound wave travel time in microseconds
+//   duration = (float)(pulseIn(DISTANCE_SENSOR_ECHO_PIN, HIGH, pulseInTimeout_us));
+//   // Calculating the distance
+//   measured_distance = duration * 0.034321f / 2.0f;
 
-  if (measured_distance <= 0.0f)
-  {
-    measured_distance = 400.0f;
-  }
+//   if (measured_distance <= 0.0f)
+//   {
+//     measured_distance = 400.0f;
+//   }
 
-  measured_distance = MIN(measured_distance, 400.0f);
+//   measured_distance = MIN(measured_distance, 400.0f);
 
-  return measured_distance;
-}
+//   return measured_distance;
+// }
 
 void setup()
 {
@@ -163,14 +188,14 @@ void setup()
   pinMode(LINE_SENSOR_4_PIN, INPUT);
   pinMode(LINE_SENSOR_5_PIN, INPUT);
 
-  pinMode(DISTANCE_SENSOR_TRIG_PIN, OUTPUT); // Trigger pin set to output
-  pinMode(DISTANCE_SENSOR_ECHO_PIN, INPUT);  // Echo pin set to input
+  // pinMode(DISTANCE_SENSOR_TRIG_PIN, OUTPUT); // Trigger pin set to output
+  // pinMode(DISTANCE_SENSOR_ECHO_PIN, INPUT);  // Echo pin set to input
 
   lineSensors.setPins(linesensors_pins, TOTAL_LINE_SENSORS);
   lineSensors.SetBackgroundColorOnlyCalibrationAvarages(BackgroundColorOnlyCalibrationAvarages);
   lineSensors.SetLineColorOlyCalibrationAvarages(LineColorOlyCalibrationAvarages);
-  setMapFromCloud(4, 5, 1);
-  //  setMap();
+  setMapFromCloud(1, 2, 6);
+  // setMap();
 }
 
 float rotateTreshold = 0.5f;
@@ -188,12 +213,6 @@ float estimated_distance_sensor = 400.0f;
 
 void loop()
 {
-
-  frontObstacleDistance = getFrontObstacleDistance_cm();
-  if (frontObstacleDistance <= EMERGENCY_BREAK_MAX_DISTANCE_FROM_OBSTACLE_CM)
-  {
-    steeringController.write(0, 0, 0);
-  }
 
   for (size_t i = 0; i < 20; i++)
   {
@@ -344,5 +363,5 @@ void loop()
   }
 
   delay(5);
-  steeringController.write(1.0f, 1.0f, 1.0f);
+  // steeringController.write(1.0f, 1.0f, 1.0f);
 }

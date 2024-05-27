@@ -37,7 +37,7 @@ String getFirestoreData(const String &documentPath)
     client.setInsecure(); // Use with caution, should verify certificates in production
 
     String url = String(FIREBASE_HOST) + "/v1/projects/" + FIREBASE_PROJECT_ID + "/databases/(default)/documents/map" + "/" + documentPath + "?key=" + FIREBASE_API_KEY;
-
+    Serial.println(url);
     https.begin(client, url);
     int httpCode = https.GET();
 
@@ -87,6 +87,212 @@ String sendStatusToFirestore(const String &documentPath, const String &data)
 //============================================================================================//
 
 std::vector<Checkpoint> preiaComandaNoua()
+{
+    int i;
+    String documentPath;
+    String jsonStr;
+    Checkpoint checkpoint;
+    DeserializationError error;
+    StaticJsonDocument<1024> jsonDoc;
+    JsonObject root, fields;
+
+    for (i = 1; i <= 6; i++)
+    {
+        switch (i)
+        {
+        case 1:
+            checkpoint.id = 1;
+            documentPath = "1";
+            jsonStr = getFirestoreData(documentPath);
+            error = deserializeJson(jsonDoc, jsonStr);
+            if (error)
+            {
+                Serial.print("deserializeJson() failed: ");
+                Serial.println(error.c_str());
+                break;
+            }
+
+            root = jsonDoc.as<JsonObject>();
+            fields = root["fields"];
+
+            checkpoint.back_id = fields["back_id"]["integerValue"].as<int>();
+            checkpoint.front_id = fields["front_id"]["integerValue"].as<int>();
+            checkpoint.left_id = fields["left_id"]["integerValue"].as<int>();
+            checkpoint.right_id = fields["right_id"]["integerValue"].as<int>();
+
+            mapPathCheckpoint.addCheckPoint(checkpoint);
+            break;
+
+        case 2:
+            checkpoint.id = 2;
+            documentPath = "2";
+            jsonStr = getFirestoreData(documentPath);
+            error = deserializeJson(jsonDoc, jsonStr);
+            if (error)
+            {
+                Serial.print("deserializeJson() failed: ");
+                Serial.println(error.c_str());
+                break;
+            }
+
+            root = jsonDoc.as<JsonObject>();
+            fields = root["fields"];
+
+            checkpoint.back_id = fields["back_id"]["integerValue"].as<int>();
+            checkpoint.front_id = fields["front_id"]["integerValue"].as<int>();
+            checkpoint.left_id = fields["left_id"]["integerValue"].as<int>();
+            checkpoint.right_id = fields["right_id"]["integerValue"].as<int>();
+
+            mapPathCheckpoint.addCheckPoint(checkpoint);
+            break;
+
+        case 3:
+            checkpoint.id = 3;
+            documentPath = "3";
+            jsonStr = getFirestoreData(documentPath);
+            error = deserializeJson(jsonDoc, jsonStr);
+            if (error)
+            {
+                Serial.print("deserializeJson() failed: ");
+                Serial.println(error.c_str());
+                break;
+            }
+
+            root = jsonDoc.as<JsonObject>();
+            fields = root["fields"];
+
+            checkpoint.back_id = fields["back_id"]["integerValue"].as<int>();
+            checkpoint.front_id = fields["front_id"]["integerValue"].as<int>();
+            checkpoint.left_id = fields["left_id"]["integerValue"].as<int>();
+            checkpoint.right_id = fields["right_id"]["integerValue"].as<int>();
+
+            mapPathCheckpoint.addCheckPoint(checkpoint);
+            break;
+
+        case 4:
+            checkpoint.id = 4;
+            documentPath = "4";
+            jsonStr = getFirestoreData(documentPath);
+            error = deserializeJson(jsonDoc, jsonStr);
+            if (error)
+            {
+                Serial.print("deserializeJson() failed: ");
+                Serial.println(error.c_str());
+                break;
+            }
+
+            root = jsonDoc.as<JsonObject>();
+            fields = root["fields"];
+
+            checkpoint.back_id = fields["back_id"]["integerValue"].as<int>();
+            checkpoint.front_id = fields["front_id"]["integerValue"].as<int>();
+            checkpoint.left_id = fields["left_id"]["integerValue"].as<int>();
+            checkpoint.right_id = fields["right_id"]["integerValue"].as<int>();
+
+            mapPathCheckpoint.addCheckPoint(checkpoint);
+            break;
+
+        case 5:
+            checkpoint.id = 5;
+            documentPath = "5";
+            jsonStr = getFirestoreData(documentPath);
+            error = deserializeJson(jsonDoc, jsonStr);
+            if (error)
+            {
+                Serial.print("deserializeJson() failed: ");
+                Serial.println(error.c_str());
+                break;
+            }
+
+            root = jsonDoc.as<JsonObject>();
+            fields = root["fields"];
+
+            checkpoint.back_id = fields["back_id"]["integerValue"].as<int>();
+            checkpoint.front_id = fields["front_id"]["integerValue"].as<int>();
+            checkpoint.left_id = fields["left_id"]["integerValue"].as<int>();
+            checkpoint.right_id = fields["right_id"]["integerValue"].as<int>();
+
+            mapPathCheckpoint.addCheckPoint(checkpoint);
+            break;
+
+        case 6:
+            checkpoint.id = 6;
+            documentPath = "6";
+            jsonStr = getFirestoreData(documentPath);
+            error = deserializeJson(jsonDoc, jsonStr);
+            if (error)
+            {
+                Serial.print("deserializeJson() failed: ");
+                Serial.println(error.c_str());
+                break;
+            }
+
+            root = jsonDoc.as<JsonObject>();
+            fields = root["fields"];
+
+            checkpoint.back_id = fields["back_id"]["integerValue"].as<int>();
+            checkpoint.front_id = fields["front_id"]["integerValue"].as<int>();
+            checkpoint.left_id = fields["left_id"]["integerValue"].as<int>();
+            checkpoint.right_id = fields["right_id"]["integerValue"].as<int>();
+
+            mapPathCheckpoint.addCheckPoint(checkpoint);
+            break;
+
+        case 7:
+            checkpoint.id = 7;
+            documentPath = "7";
+            jsonStr = getFirestoreData(documentPath);
+            error = deserializeJson(jsonDoc, jsonStr);
+            if (error)
+            {
+                Serial.print("deserializeJson() failed: ");
+                Serial.println(error.c_str());
+                break;
+            }
+
+            root = jsonDoc.as<JsonObject>();
+            fields = root["fields"];
+
+            checkpoint.back_id = fields["back_id"]["integerValue"].as<int>();
+            checkpoint.front_id = fields["front_id"]["integerValue"].as<int>();
+            checkpoint.left_id = fields["left_id"]["integerValue"].as<int>();
+            checkpoint.right_id = fields["right_id"]["integerValue"].as<int>();
+
+            mapPathCheckpoint.addCheckPoint(checkpoint);
+            break;
+
+        case 8:
+            checkpoint.id = 8;
+            documentPath = "8";
+            jsonStr = getFirestoreData(documentPath);
+            error = deserializeJson(jsonDoc, jsonStr);
+            if (error)
+            {
+                Serial.print("deserializeJson() failed: ");
+                Serial.println(error.c_str());
+                break;
+            }
+
+            root = jsonDoc.as<JsonObject>();
+            fields = root["fields"];
+
+            checkpoint.back_id = fields["back_id"]["integerValue"].as<int>();
+            checkpoint.front_id = fields["front_id"]["integerValue"].as<int>();
+            checkpoint.left_id = fields["left_id"]["integerValue"].as<int>();
+            checkpoint.right_id = fields["right_id"]["integerValue"].as<int>();
+
+            mapPathCheckpoint.addCheckPoint(checkpoint);
+            break;
+        }
+    }
+
+    return mapPathCheckpoint.getCheckPoints(); // returning the map from the Date Base
+    Serial.println("Succesfull reading from DB.");
+}
+
+// ===============================================================================================//
+
+std::vector<Checkpoint> getMap2()
 {
     int i;
     String documentPath;
