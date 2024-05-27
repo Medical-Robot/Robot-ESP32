@@ -1,0 +1,14 @@
+1 - Functia "sendStateToCLoud" se refera la documentul 1 (String documentPath = "1") asta inseamna ca trebuie sa se adauge la
+comanda in baza de date "previousCheckPoint", "nextCheckPoint" si "destination" sau direct "destination"; "previousCheckPoint" si 
+"nextCheckPoint" pot fi hardcodate. La fiecare loop se ia harta (avem implementata cod + baza date), comanda la care se ia destinatia
+(trebuie neaparat numarul nodului adica 1,2,3,4,5 sau 6 [daca nu intelegi vezi la poze]) precum si id-ul acesteia ca sa stii
+ce comanda modifici cand ai incheiat traseul. (de regula ar fi mai usor de demonstrat daca toate documentele au unul din id-urile
+1, 2, 3, 4, 5....)
+
+2 - Verificati senzorul RFID, nu mi-a mers si cred ca l-am ars dar merita incercat (daca nu schimbati-l daca aveti cu ce) inca odata, 
+exista in teste citirea id-ului; este de 4 bytes (4 integeruri). Odata citit RFID-ul il vom compara cu functia :......: care 
+returneaza id-ul (tot 4 bytes dar trebuie adaugate de mana in baza de date, deci se face testul cu citirea pentru fiecare card si 
+de noteaza id-ul undeva si mai apoi se adauga in baza de date, pe scurt hardcodam medicamentele/paturile cu un id unic). Cel mai bine 
+montat senzorul undeva in fata masini ca sa vada si cardul de la pat (sa stea pe verticala). 
+
+3 - Pe baza exemplelor de send si get se pot implementa alte functionalitati specifice, diferenta: url-ul din functie.

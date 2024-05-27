@@ -28,6 +28,7 @@ bool signupOK = false;
 ComandaMedicamente comandaMedicamente;
 WiFiClientSecure client;
 HTTPClient https;
+std::vector<String> documentIds;
 
 //============================================================================================//
 
@@ -357,15 +358,48 @@ void sendStateToCLoud(ComandaMedicamenteStatus status)
     serializeJson(comenziDoc, jsonStr);
 
     sendStatusToFirestore(documentPath, jsonStr);
-    Serial.printf("Data sent with succes to DB.");
+}
 
-    // if ((millis() - startTime) >= 5000)
-    // {
-    //     startTime = millis();
-    //     serializeJson(comenziDoc, jsonStr);
-    //     sendStatusToFirestore(documentPath, jsonStr);
-    //     Serial.printf("Data sent with succes to DB.");
-    // }
+//============================================================================================//
+
+std::vector<String> getDocumentIDs()
+{
+    client.setInsecure(); // Utilizați cu precauție în producție, ar trebui să verificați certificatele
+
+    String url = String(FIREBASE_HOST) + "/v1/projects/" + FIREBASE_PROJECT_ID + "/databases/(default)/documents/comenzi?pageSize=100&key=" + FIREBASE_API_KEY;
+
+    https.begin(client, url);
+    int httpCode = https.GET();
+
+    if (httpCode > 0)
+    {
+        String payload = https.getString();
+
+        StaticJsonDocument<2048> doc;
+        DeserializationError error = deserializeJson(doc, payload);
+
+        if (error)
+        {
+            Serial.print("deserializeJson() failed: ");
+            Serial.println(error.c_str());
+            return documentIds; // Returnează lista goală în caz de eroare
+        }
+
+        JsonArray documents = doc["documents"].as<JsonArray>();
+        for (JsonObject document : documents)
+        {
+            String name = document["name"];
+            String documentId = name.substring(name.lastIndexOf("/") + 1);
+            documentIds.push_back(documentId);
+        }
+    }
+    else
+    {
+        Serial.printf("GET request failed, error: %s\n", https.errorToString(httpCode).c_str());
+    }
+
+    https.end();
+    return documentIds;
 }
 
 //============================================================================================//

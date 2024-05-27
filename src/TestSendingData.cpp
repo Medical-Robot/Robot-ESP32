@@ -23,7 +23,8 @@ void setup()
 
 void loop()
 {
-
-  sendStateToCLoud(ComandaMedicamenteStatus::STATUS_COMPLETED);
+  getDocumentIDs();
+  
   delay(10000);
+  // sendStateToCLoud(ComandaMedicamenteStatus::STATUS_COMPLETED);
 }
