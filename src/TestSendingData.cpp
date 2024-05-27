@@ -10,19 +10,20 @@
 #include <dataStructures.h>
 #include <FireBaseFunctions.h>
 
-void setup(){
- Serial.begin(9600);
+void setup()
+{
+  Serial.begin(9600);
 
-  SPI.begin();        // Init SPI bus
-  mfrc522.PCD_Init(); // Init MFRC522
-  delay(4);
+  //   SPI.begin();        // Init SPI bus
+  //   mfrc522.PCD_Init(); // Init MFRC522
+  //   delay(4);
 
   connectingTo();
-
 }
 
-void loop(){
+void loop()
+{
 
- sendStateToCLoud(ComandaMedicamenteStatus::STATUS_COMPLETED);
-    delay(10000);
+  sendStateToCLoud(ComandaMedicamenteStatus::STATUS_COMPLETED);
+  delay(10000);
 }

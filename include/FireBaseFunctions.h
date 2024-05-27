@@ -60,16 +60,20 @@ String sendStatusToFirestore(const String &documentPath, const String &data)
 {
     client.setInsecure();
 
-    String url = String(FIREBASE_HOST) + "/v1/projects/" + FIREBASE_PROJECT_ID + "/databases/(default)/documents/comenzi" + "/" + documentPath + "?key=" + FIREBASE_API_KEY;
+    String url = String(FIREBASE_HOST) + "/v1/projects/" + FIREBASE_PROJECT_ID + "/databases/(default)/documents/comenzi" + "/" + documentPath + "?updateMask.fieldPaths=status&key=" + FIREBASE_API_KEY;
 
     https.begin(client, url);
     https.addHeader("Content-Type", "application/json");
 
-    int httpCode = https.PUT(data); // Sending data as a string
+    int httpCode = https.PATCH(data); // Sending data as a string
 
     if (httpCode > 0)
     {
         Serial.printf("Data sent successfully, HTTP response code: %d\n", httpCode);
+        if (httpCode == 200)
+        {
+            Serial.println("Field updated successfully.");
+        }
     }
     else
     {
@@ -329,7 +333,6 @@ void sendStateToCLoud(ComandaMedicamenteStatus status)
 {
     // Convertirea codului de eroare într-un string
     String statusParsed;
-    static uint32_t startTime = millis();
     String documentPath = "1";
     String jsonStr;
     StaticJsonDocument<1024> comenziDoc;
@@ -350,15 +353,19 @@ void sendStateToCLoud(ComandaMedicamenteStatus status)
         break;
     }
 
-    comenziDoc["status"] = statusParsed;
+    comenziDoc["fields"]["status"]["stringValue"] = statusParsed;
+    serializeJson(comenziDoc, jsonStr);
 
-    if ((millis() - startTime) >= 5000)
-    {
-        startTime = millis();
-        serializeJson(comenziDoc, jsonStr);
-        sendStatusToFirestore(documentPath, jsonStr);
-        Serial.printf("Data sent with succes to DB.");
-    }
+    sendStatusToFirestore(documentPath, jsonStr);
+    Serial.printf("Data sent with succes to DB.");
+
+    // if ((millis() - startTime) >= 5000)
+    // {
+    //     startTime = millis();
+    //     serializeJson(comenziDoc, jsonStr);
+    //     sendStatusToFirestore(documentPath, jsonStr);
+    //     Serial.printf("Data sent with succes to DB.");
+    // }
 }
 
 //============================================================================================//
