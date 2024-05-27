@@ -31,8 +31,6 @@
 Path checkPointPath;
 CheckPointDirection checkpointDirection;
 ComandaMedicamente comandaMedicamente;
-Map mapPathCheckpoint;
-
 
 const float PID_Kp = 1.0f;
 
