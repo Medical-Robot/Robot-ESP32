@@ -1,5 +1,7 @@
 ﻿  main.cpp
-C:\Users\Daniel\OneDrive - Universitatea Politehnica Timisoara\Desktop\Robot-ESP32\UnitTest\CheckpointMap\Map.h(28,12): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Daniel\OneDrive - Universitatea Politehnica Timisoara\Desktop\Robot-ESP32\UnitTest\CheckpointMap\Map.h(37,12): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Daniel\OneDrive - Universitatea Politehnica Timisoara\Desktop\Robot-ESP32\UnitTest\CheckpointMap\Map.h(281,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-  CheckpointMap.vcxproj -> C:\Users\Daniel\OneDrive - Universitatea Politehnica Timisoara\Desktop\Robot-ESP32\UnitTest\CheckpointMap\x64\Debug\CheckpointMap.exe
+C:\OneDrive\OneDrive - Universitatea Politehnica Timisoara\Programming\arduino\Robot-ESP32\UnitTest\CheckpointMap\Path.h(91,18): warning C4101: 'nextCheckpoint_temp': unreferenced local variable
+C:\OneDrive\OneDrive - Universitatea Politehnica Timisoara\Programming\arduino\Robot-ESP32\UnitTest\CheckpointMap\Path.h(92,7): warning C4101: 'temp': unreferenced local variable
+C:\OneDrive\OneDrive - Universitatea Politehnica Timisoara\Programming\arduino\Robot-ESP32\UnitTest\CheckpointMap\Map.h(28,12): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+C:\OneDrive\OneDrive - Universitatea Politehnica Timisoara\Programming\arduino\Robot-ESP32\UnitTest\CheckpointMap\Map.h(37,12): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+C:\OneDrive\OneDrive - Universitatea Politehnica Timisoara\Programming\arduino\Robot-ESP32\UnitTest\CheckpointMap\Map.h(281,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  CheckpointMap.vcxproj -> C:\OneDrive\OneDrive - Universitatea Politehnica Timisoara\Programming\arduino\Robot-ESP32\UnitTest\CheckpointMap\x64\Debug\CheckpointMap.exe

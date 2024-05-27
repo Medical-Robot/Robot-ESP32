@@ -1,1 +1,2 @@
 C:\Users\Daniel\OneDrive - Universitatea Politehnica Timisoara\Desktop\Robot-ESP32\UnitTest\CheckpointMap\x64\Debug\CheckpointMap.exe
+C:\OneDrive\OneDrive - Universitatea Politehnica Timisoara\Programming\arduino\Robot-ESP32\UnitTest\CheckpointMap\x64\Debug\CheckpointMap.exe

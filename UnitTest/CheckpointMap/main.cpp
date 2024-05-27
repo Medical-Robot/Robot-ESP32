@@ -56,10 +56,10 @@ void setMap()
 	checkPoint.right_id = 0;
 	mapPathCheckpoint.addCheckPoint(checkPoint);
 
-	mapPathCheckpoint.setPreviousCheckPoint(2);
-	mapPathCheckpoint.setNextCheckPoint(3);
+	mapPathCheckpoint.setPreviousCheckPoint(5);
+	mapPathCheckpoint.setNextCheckPoint(4);
 
-	checkPointPath = mapPathCheckpoint.findPath(5);
+	checkPointPath = mapPathCheckpoint.findPath(3);
 }
 
 
