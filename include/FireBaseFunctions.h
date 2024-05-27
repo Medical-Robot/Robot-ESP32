@@ -1,3 +1,4 @@
+#pragma once
 #include <WiFi.h>
 #include <HTTPClient.h>
 #include <WiFiClientSecure.h>
@@ -94,7 +95,7 @@ std::vector<Checkpoint> preiaComandaNoua()
     String jsonStr;
     Checkpoint checkpoint;
     DeserializationError error;
-    StaticJsonDocument<1024> jsonDoc;
+    StaticJsonDocument<512> jsonDoc;
     JsonObject root, fields;
 
     for (i = 1; i <= 6; i++)
@@ -300,7 +301,7 @@ std::vector<Checkpoint> getMap2()
     String jsonStr;
     Checkpoint checkpoint;
     DeserializationError error;
-    StaticJsonDocument<1024> jsonDoc;
+    StaticJsonDocument<512> jsonDoc;
     JsonObject root, fields;
 
     for (i = 1; i <= 6; i++)
@@ -543,7 +544,7 @@ void sendStateToCLoud(ComandaMedicamenteStatus status)
     String statusParsed;
     String documentPath = "1";
     String jsonStr;
-    StaticJsonDocument<1024> comenziDoc;
+    StaticJsonDocument<512> comenziDoc;
 
     switch (status)
     {
@@ -582,7 +583,7 @@ std::vector<String> getDocumentIDs()
     {
         String payload = https.getString();
 
-        StaticJsonDocument<2048> doc;
+        StaticJsonDocument<512> doc;
         DeserializationError error = deserializeJson(doc, payload);
 
         if (error)
@@ -618,7 +619,7 @@ std::vector<Robot> preiaRobot()
     String jsonStr;
     Robot robot;
     DeserializationError error;
-    StaticJsonDocument<1024> jsonDoc;
+    StaticJsonDocument<512> jsonDoc;
     JsonObject root, fields;
 
     for (const String &documentId : documentIds)
