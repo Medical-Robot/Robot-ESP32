@@ -45,12 +45,12 @@ std::vector<PathCheckpoint> pathCheckPoints;
 bool isRemoteControlMode = false;
 
 const float PID_Kp = 1.0f;
+float maxSpeed = 0.35f;
 
 int linesensors_pins[TOTAL_LINE_SENSORS] = {LINE_SENSOR_1_PIN, LINE_SENSOR_2_PIN, LINE_SENSOR_3_PIN, LINE_SENSOR_4_PIN, LINE_SENSOR_5_PIN};
 LineSensors lineSensors(TOTAL_LINE_SENSORS);
 float sensorsReadings[TOTAL_LINE_SENSORS];
 Point2D linePosition;
-float maxSpeed = 0.5f;
 
 SoftwareSerial serial_soft1(4, 5); // RX TX 16, 17 NU MERG
 SoftwareSerialPortSteeringController steeringController(serial_soft1, 255.0f, 0.0f, -255.0f);
@@ -241,7 +241,6 @@ void setup()
 }
 
 float rotateTreshold = 0.5f;
-float maxSpeed = 0.35f;
 float speed = maxSpeed;
 float right_track_speed_cercentage = 1.0f;
 float left_track_speed_cercentage = 1.0f;
@@ -311,7 +310,7 @@ void loop()
       checkpointDirection = checkPointPath.getNextDirection();
       switch (checkpointDirection)
       {
-      case CheckPointDirection::FRONT:
+      case CheckPointDirection::FRONT1:
         middleLineMax.x = 0.0f;
         break;
       case CheckPointDirection::BACK:

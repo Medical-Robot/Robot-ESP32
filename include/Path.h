@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 
-typedef enum CheckPointDirection_e { LEFT, RIGHT, FRONT, BACK, NONE }CheckPointDirection;
+typedef enum CheckPointDirection_e { LEFT, RIGHT, FRONT1, BACK, NONE }CheckPointDirection;
 typedef struct PathCheckpoint_s {
 	int id;
 	int next_checkpoint_id;
@@ -118,7 +118,7 @@ public:
 		}
 
 		if (checkpoint.next_checkpoint_id == checkpoint.front_id) {
-			direction = CheckPointDirection::FRONT;
+			direction = CheckPointDirection::FRONT1;
 		}
 		else if (checkpoint.next_checkpoint_id == checkpoint.back_id) {
 			direction = CheckPointDirection::BACK;
