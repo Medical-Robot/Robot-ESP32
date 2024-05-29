@@ -88,6 +88,46 @@ String sendStatusToFirestore(const String &documentPath, const String &data)
 
 //============================================================================================//
 
+// std::vector<Checkpoint> preiaComandaNoua()
+// {
+//     {
+//         documentIds = getDocumentIDs("map");
+//         String documentPath;
+//         String jsonStr;
+//         Checkpoint checkpoint;
+//         DeserializationError error;
+//         StaticJsonDocument<512> jsonDoc;
+//         JsonObject root, fields;
+
+//         for (size_t i = 1; i <= documentIds.size(); i++)
+//         {
+//             documentPath = documentIds[i];
+//             checkpoint.id = 1;
+//             jsonStr = getFirestoreData(documentPath);
+//             error = deserializeJson(jsonDoc, jsonStr);
+//             if (error)
+//             {
+//                 Serial.print("deserializeJson() failed: ");
+//                 Serial.println(error.c_str());
+//                 break;
+//             }
+
+//             root = jsonDoc.as<JsonObject>();
+//             fields = root["fields"];
+
+//             checkpoint.back_id = fields["back_id"]["integerValue"].as<int>();
+//             checkpoint.front_id = fields["front_id"]["integerValue"].as<int>();
+//             checkpoint.left_id = fields["left_id"]["integerValue"].as<int>();
+//             checkpoint.right_id = fields["right_id"]["integerValue"].as<int>();
+
+//             mapPathCheckpoint.addCheckPoint(checkpoint);
+//         }
+//     }
+
+//     return mapPathCheckpoint.getCheckPoints(); // returning the map from the Date Base
+//     Serial.println("Succesfull reading from DB.");
+// }
+
 std::vector<Checkpoint> preiaComandaNoua()
 {
     int i;

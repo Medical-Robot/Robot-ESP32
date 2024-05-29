@@ -1,7 +1,7 @@
 #pragma once
 #include <string.h>
 #include "PurePursuitGeometry.h"
-#include "cubic.c"
+//#include "cubic.c"
 #include "MovingAverage.h"
 
 class LineSensors
@@ -52,7 +52,7 @@ public:
 		}
 		MaxValueSensorIndex = this->MaxValueIndexFloatArray(this->LineColorSensorsPercentage, this->NumberOfSensors);
 		MinValueSensorIndex = this->MinValueIndexFloatArray(this->LineColorSensorsPercentage, this->NumberOfSensors);
-
+/*
 		if (this->NumberOfSensors >= 3)
 		{
 			if (MaxValueSensorIndex > 0 && MaxValueSensorIndex < (this->NumberOfSensors - 1)) {
@@ -136,7 +136,7 @@ public:
 				}
 			}
 		}
-
+*/
 		middleLine.x = MaxValueSensorIndex;
 		middleLine.y = this->LineColorSensorsPercentage[MaxValueSensorIndex];
 
